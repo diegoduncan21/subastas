@@ -28,4 +28,10 @@ urlpatterns = patterns('',
         view=views.UserUpdateView.as_view(),
         name='update'
     ),
+    # URL pattern of the UserCreateView
+    url(
+        regex=r'^~create/$',
+        view=views.UserCreateView.as_view(),
+        name='create'
+    ),
 )

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="col-md-4">
+      </ul>
+        <li class="list-group-item"><a href="{% url 'home' %}">Subastas</a></li>
+        <li class="list-group-item"><a href="{% url 'users:create' %}">Usuarios</a></li>
+        <li class="list-group-item"><a href="#">Martilleros</a></li>
+        <li class="list-group-item"><a href="#">Escribanos</a></li>
+      </ul>
+    </div>
+
+     <div class="col-md-8">
+        {% block content_administrador %}
+            si aca van cosas
+        {% endblock content_administrador %}
+    </div>
+{% endblock content %}
+

@@ -3,6 +3,7 @@
 from django.core.urlresolvers import reverse
 
 # view imports
+from django.views.generic import CreateView
 from django.views.generic import DetailView
 from django.views.generic import RedirectView
 from django.views.generic import UpdateView
@@ -12,7 +13,7 @@ from django.views.generic import ListView
 from braces.views import LoginRequiredMixin
 
 # Import the form from users/forms.py
-from .forms import UserForm
+from .forms import CreateUserForm, UserForm
 
 # Import the customized User model
 from .models import User
@@ -55,3 +56,8 @@ class UserListView(LoginRequiredMixin, ListView):
     # These next two lines tell the view to index lookups by username
     slug_field = "username"
     slug_url_kwarg = "username"
+
+
+class UserCreateView(LoginRequiredMixin, CreateView):
+    model = User
+    form_class = CreateUserForm

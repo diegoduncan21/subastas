@@ -1,1 +1,26 @@
 {% extends "base.html" %}
+
+{% block content %}
+    <div>
+        {% if user.is_anonymous %}
+            <h3>Bienvenido, por favor inicie sesión <a href="{% url 'account_login' %}">aqui</a></h3>.
+        {% else %}
+            <h3>Bienvenido {{ user }}</h3>
+
+            tenes los permisos de (
+            {% if perms.users.administrador %}
+                administrador,
+            {% endif %}
+
+            {% if perms.users.acreditador %}
+                acreditador,
+            {% endif %}
+
+            {% if perms.users.actero %}
+                actero
+            {% endif %}
+            )
+        {% endif %}
+    </div>
+
+{% endblock content %}
