@@ -1,0 +1,23 @@
+{% extends 'subastas/bases/admin_base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content_administrador %}
+
+    <div>
+        <h2>Agregar usuario</h2>
+        {% crispy form %}
+    </div>
+
+    <hr>
+
+    <div>
+        <h2>Usuarios</h2>
+        <ul>
+            {% for u in users %}
+                <li>{{ u }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+{% endblock content_administrador %}

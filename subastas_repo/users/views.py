@@ -9,6 +9,7 @@ from django.views.generic import RedirectView
 from django.views.generic import UpdateView
 from django.views.generic import ListView
 
+from allauth.account.models import EmailAddress, EmailConfirmation
 # Only authenticated users can access views using this.
 from braces.views import LoginRequiredMixin
 
@@ -59,5 +60,23 @@ class UserListView(LoginRequiredMixin, ListView):
 
 
 class UserCreateView(LoginRequiredMixin, CreateView):
-    model = User
     form_class = CreateUserForm
+    model = User
+    template_name = 'subastas/admin/administrador_list_form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(UserCreateView, self).get_context_data(**kwargs)
+        context['users'] = User.objects.exclude(id=self.request.user.id)
+        return context
+
+    def form_valid(self, form):
+        user = form.save()
+        user.user_permissions.add(form.cleaned_data.get('perfil'))
+        user.set_password(form.cleaned_data.get('password'))
+        EmailAddress.objects.create(user=user, email=user.username, verified=True)
+
+        return super(UserCreateView, self).form_valid(form)
+
+    # send the user back to their own page after a successful create
+    def get_success_url(self):
+        return reverse("home")
