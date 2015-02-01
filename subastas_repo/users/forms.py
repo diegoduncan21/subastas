@@ -27,14 +27,16 @@ class CreateUserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
     password2 = forms.CharField(widget=forms.PasswordInput())
 
-
     def __init__(self, *args, **kwargs):
         super(CreateUserForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.form_method = "post"
-        self.helper.form_action = reverse('users:create')
         self.helper.add_input(Submit('user_submit', 'Guardar'))
-        self.helper.add_input(Reset('user_reset', 'Limpiar', css_class='btn-default'))
+        self.helper.add_input(Reset('user_reset', 'Limpiar',
+                              css_class='btn-default'))
+
+        self.username = None
+        if 'instance' in kwargs and kwargs.get('instance') is not None:
+            self.username = kwargs['instance'].username
 
     class Meta:
         # Set this form to use the User model.
@@ -47,9 +49,14 @@ class CreateUserForm(forms.ModelForm):
                   "perfil")
 
     def clean_username(self):
+        """Check if the username already exists, and is not his email"""
+
         username = self.cleaned_data['username']
-        if User.objects.filter(username=username).exists():
-            raise forms.ValidationError("El nombre de usuario ya esta en uso.")
+
+        if self.username:
+            if self.username != username:
+                if User.objects.filter(username=username).exists():
+                    raise forms.ValidationError("El nombre de usuario ya esta en uso.")
         return username
 
     def clean(self):

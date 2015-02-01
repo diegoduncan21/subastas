@@ -2,6 +2,8 @@
 # Import the reverse lookup function
 from django.core.urlresolvers import reverse
 
+from django.shortcuts import render, redirect
+
 # view imports
 from django.views.generic import CreateView
 from django.views.generic import DetailView
@@ -58,25 +60,47 @@ class UserListView(LoginRequiredMixin, ListView):
     slug_field = "username"
     slug_url_kwarg = "username"
 
+    def get_queryset(self):
+        return User.objects.exclude(id=self.request.user.id)
 
-class UserCreateView(LoginRequiredMixin, CreateView):
-    form_class = CreateUserForm
-    model = User
-    template_name = 'subastas/admin/administrador_list_form.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(UserCreateView, self).get_context_data(**kwargs)
-        context['users'] = User.objects.exclude(id=self.request.user.id)
-        return context
+def create_user(request):
+    if request.method == "POST":
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            user.user_permissions.add(form.cleaned_data.get('perfil'))
+            user.set_password(form.cleaned_data.get('password'))
+            EmailAddress.objects.create(user=user,
+                                        email=user.username,
+                                        verified=True)
+            return redirect(reverse("users:list"))
+    else:
+        form = CreateUserForm()
+    return render(request, 'users/user_form.html',
+                  {'form': form})
 
-    def form_valid(self, form):
-        user = form.save()
-        user.user_permissions.add(form.cleaned_data.get('perfil'))
-        user.set_password(form.cleaned_data.get('password'))
-        EmailAddress.objects.create(user=user, email=user.username, verified=True)
 
-        return super(UserCreateView, self).form_valid(form)
+def update_user(request, user_id):
+    instance = User.objects.get(id=user_id)
+    if request.method == "POST":
+        form = CreateUserForm(request.POST, instance=instance)
+        if form.is_valid():
+            user = form.save()
+            user.user_permissions.clear()
+            user.user_permissions.add(form.cleaned_data.get('perfil'))
+            user.set_password(form.cleaned_data.get('password'))
+            user.save()
+            EmailAddress.objects.get_or_create(user=user,
+                                               email=user.username,
+                                               verified=True)
+            return redirect(reverse("users:list"))
+    else:
+        form = CreateUserForm(instance=instance,
+                              initial={'perfil': instance.user_permissions.last()})
+    return render(request, 'users/user_form.html',
+                  {'form': form,
+                   'instance': instance})
 
-    # send the user back to their own page after a successful create
-    def get_success_url(self):
-        return reverse("home")
+
+# 'perfil': self.get_object().user_permissions.last()

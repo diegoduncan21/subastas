@@ -5,8 +5,7 @@
 {% block content_administrador %}
 
     <div>
-        <h2>Agregar usuario</h2>
-        {% crispy form %}
+        <a class="btn btn-primary" href="#">Agregar usuario</a>
     </div>
 
     <hr>
@@ -15,7 +14,11 @@
         <h2>Usuarios</h2>
         <ul>
             {% for u in users %}
-                <li>{{ u }}</li>
+                <li>
+                    <a href="{% url 'users:update_user' u.id %}">
+                        {{ u }}
+                    </a>
+                </li>
             {% endfor %}
         </ul>
     </div>

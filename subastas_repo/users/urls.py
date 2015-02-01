@@ -22,16 +22,17 @@ urlpatterns = patterns('',
         view=views.UserDetailView.as_view(),
         name='detail'
     ),
-    # URL pattern for the UserUpdateView
-    url(
-        regex=r'^~update/$',
-        view=views.UserUpdateView.as_view(),
-        name='update'
-    ),
     # URL pattern of the UserCreateView
     url(
         regex=r'^~create/$',
-        view=views.UserCreateView.as_view(),
+        view=views.create_user,
         name='create'
+    ),
+
+    # URL patter of the UserUpdateSubastasView
+    url(
+        regex=r'^~update/(?P<user_id>\d+)/$',
+        view=views.update_user,
+        name='update'
     ),
 )
