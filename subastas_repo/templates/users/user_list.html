@@ -5,11 +5,12 @@
 {% block content_administrador %}
 
     <div class="row">
-      <div class="col-md-6">
-        <h2>Usuarios</h2>
-      </div>
-      <div class="col-md-6">
-        <a class="btn btn-primary pull-right" href="{% url 'users:create' %}">Agregar usuario</a>
+      <div class="col-md-12">
+        <h2>
+          Usuarios
+
+          <a class="btn btn-primary pull-right" href="{% url 'users:create' %}">Agregar usuario</a>
+        </h2>
       </div>
     </div>
 
@@ -18,7 +19,25 @@
         <div class="list-group">
             {% for user in user_list %}
               <a href="{% url 'users:update' user.id %}" class="list-group-item">
-                <h5 class="list-group-item-heading">{{ user.username }}</h4>
+                <h5 class="list-group-item-heading">{{ user.username }}
+                  {% if 'users.administrador' in user.get_all_permissions %}
+                    <span class="label label-success pull-right">
+                      administrador
+                    </span>
+                  {% endif %}
+
+                  {% if 'users.acreditador' in user.get_all_permissions %}
+                    <span class="label label-primary pull-right">
+                      acreditador
+                    </span>
+                  {% endif %}
+
+                  {% if 'users.actero' in user.get_all_permissions %}
+                    <span class="label label-default pull-right">
+                      actero
+                    </span>
+                  {% endif %}
+                </h5>
                 <p class="list-group-item-text">{{ maker.tagline }}</p>
               </a>
             {% endfor %}

@@ -51,8 +51,7 @@
           </ul>
           <ul class="nav navbar-nav navbar-right">
             {% if request.user.is_authenticated %}
-              <li><a href="{% url 'users:detail' request.user.username  %}">Mi perfil</a></li>
-              <li><a href="{% url 'account_logout' %}">Desconectarse</a></li>
+              <li><a href="{% url 'account_logout' %}">Desconectarse({{ user }})</a></li>
             {% else %}
               <li><a href="{% url 'account_login' %}">Ingresar</a></li>
             {% endif %}
