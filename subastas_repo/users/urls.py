@@ -12,7 +12,7 @@ urlpatterns = patterns('',
     ),
     # URL pattern for the UserRedirectView
     url(
-        regex=r'^~redirect/$',
+        regex=r'^redirect/$',
         view=views.UserRedirectView.as_view(),
         name='redirect'
     ),
@@ -24,15 +24,19 @@ urlpatterns = patterns('',
     ),
     # URL pattern of the UserCreateView
     url(
-        regex=r'^~create/$',
+        regex=r'^create/$',
         view=views.create_user,
         name='create'
     ),
-
     # URL patter of the UserUpdateSubastasView
     url(
-        regex=r'^~update/(?P<user_id>\d+)/$',
+        regex=r'^update/(?P<user_id>\d+)/$',
         view=views.update_user,
         name='update'
+    ),
+    url(
+        regex=r'^delete/(?P<pk>\d+)/$',
+        view=views.UserDeleteView.as_view(),
+        name='delete'
     ),
 )

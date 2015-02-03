@@ -1,0 +1,35 @@
+{% extends 'subastas/bases/admin_base.html' %}
+
+{% load static %}{% load i18n %}
+
+{% block content_administrador %}
+
+    <div class="row">
+      <div class="col-md-12">
+        <h2>
+          Profesionales
+
+          <a class="btn btn-primary pull-right" href="{% url 'personas:profesionales_create' %}">Agregar profesional</a>
+        </h2>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="list-group">
+            {% for profesional in profesional_list %}
+              <a href="{% url 'personas:profesionales_update' profesional.id %}" class="list-group-item">
+                <h5 class="list-group-item-heading">
+                  {{ profesional }}
+                  <span class="label label-default pull-right">
+                    {{ profesional.titulo }}
+                  </span>
+                </h5>
+              </a>
+            {% endfor %}
+
+        </div>
+      </div>
+    </div>
+
+{% endblock content_administrador %}

@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 # Import the reverse lookup function
 from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse_lazy
 
 from django.shortcuts import render, redirect
 
 # view imports
 from django.views.generic import CreateView
 from django.views.generic import DetailView
+from django.views.generic import DeleteView
 from django.views.generic import RedirectView
 from django.views.generic import UpdateView
 from django.views.generic import ListView
@@ -103,4 +105,6 @@ def update_user(request, user_id):
                    'instance': instance})
 
 
-# 'perfil': self.get_object().user_permissions.last()
+class UserDeleteView(LoginRequiredMixin, DeleteView):
+    model = User
+    success_url = reverse_lazy('users:list')

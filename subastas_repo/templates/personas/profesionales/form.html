@@ -9,26 +9,24 @@
             <h1>
                 {% block header %}
                     {% if instance %}
-                        Modificar usuario: {{ instance }}
+                        Modificar profesional: {{ instance }}
                     {% else %}
-                        Agregar Usuario
+                        Agregar Profesional
                     {% endif %}
                 {% endblock %}
             </h1>
             <form class="form-horizontal" method="post"
                   action="{% if instance %}
-                            {% url 'users:update' instance.id %}
+                            {% url 'personas:profesionales_update' instance.id %}
                           {% else %}
-                            {% url 'users:create' %}
+                            {% url 'personas:profesionales_create' %}
                           {% endif %}">
                 {% csrf_token %}
                 {{ form|crispy }}
                 <div class="control-group">
                   <div class="controls">
                     <button type="submit" class="btn btn-success">Aplicar</button>
-                    <a href="{% url 'users:delete' instance.id %}" class="btn btn-danger">
-                        Eliminar
-                    </a>
+                    <a href="{% url 'personas:profesionales_delete' object.id %}" class="btn btn-danger">Eliminar</a>
                   </div>
                 </div>
             </form>

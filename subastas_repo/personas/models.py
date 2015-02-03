@@ -1,5 +1,8 @@
 from django.db import models
 
+from model_utils.fields import StatusField
+from model_utils import Choices
+
 
 class Persona(models.Model):
     nombres = models.CharField(max_length=100, blank=True, null=True)
@@ -20,10 +23,17 @@ class Persona(models.Model):
 
 
 class Profesional(models.Model):
+    TITULOS = Choices(('abogado', 'Abogado'),
+                      ('escribano', 'Escribano'),
+                      ('martillero', 'Martillero'))
+
     nombres = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)
     dni = models.CharField(max_length=10, blank=True, null=True)
-    titulo = models.CharField(max_length=100, blank=True, null=True)
+    titulo = models.CharField(choices=TITULOS,
+                              max_length=100,
+                              blank=True,
+                              null=True)
     matricula = models.CharField(max_length=50, blank=True, null=True)
     telefono = models.CharField(max_length=20, blank=True, null=True)
 
