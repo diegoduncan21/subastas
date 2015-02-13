@@ -1,6 +1,5 @@
 from django.db import models
 
-from model_utils.fields import StatusField
 from model_utils import Choices
 
 
