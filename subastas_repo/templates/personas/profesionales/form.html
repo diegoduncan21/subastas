@@ -26,7 +26,11 @@
                 <div class="control-group">
                   <div class="controls">
                     <button type="submit" class="btn btn-success">Aplicar</button>
-                    <a href="{% url 'personas:profesionales_delete' object.id %}" class="btn btn-danger">Eliminar</a>
+                    {% if object %}
+                        <a href="{% url 'personas:profesionales_delete' object.id %}" class="btn btn-danger">
+                            Eliminar
+                        </a>
+                    {% endif %}
                   </div>
                 </div>
             </form>

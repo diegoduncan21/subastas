@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+
+from django.contrib.auth.decorators import login_required
+
 # Import the reverse lookup function
 from django.core.urlresolvers import reverse
 from django.core.urlresolvers import reverse_lazy
@@ -6,14 +9,13 @@ from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import render, redirect
 
 # view imports
-from django.views.generic import CreateView
 from django.views.generic import DetailView
 from django.views.generic import DeleteView
 from django.views.generic import RedirectView
 from django.views.generic import UpdateView
 from django.views.generic import ListView
 
-from allauth.account.models import EmailAddress, EmailConfirmation
+from allauth.account.models import EmailAddress
 # Only authenticated users can access views using this.
 from braces.views import LoginRequiredMixin
 
@@ -66,6 +68,7 @@ class UserListView(LoginRequiredMixin, ListView):
         return User.objects.exclude(id=self.request.user.id)
 
 
+@login_required
 def create_user(request):
     if request.method == "POST":
         form = CreateUserForm(request.POST)

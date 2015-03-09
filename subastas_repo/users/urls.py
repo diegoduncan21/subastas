@@ -24,7 +24,7 @@ urlpatterns = patterns('',
     ),
     # URL pattern of the UserCreateView
     url(
-        regex=r'^create/$',
+        regex=r'^create$',
         view=views.create_user,
         name='create'
     ),
