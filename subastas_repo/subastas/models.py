@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.utils import timezone
 
 class Rodado(models.Model):
     numero_inventario = models.IntegerField()
@@ -40,6 +40,11 @@ class Subasta(models.Model):
 
     def __unicode__(self):
         return "%s %s" % (self.numero, self.decreto)
+
+    @classmethod
+    def get_current(self):
+        return self.objects \
+            .filter(fecha_hora__day=timezone.now().day).last()
 
 
 class Actas(models.Model):

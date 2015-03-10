@@ -1,0 +1,21 @@
+{% extends 'subastas/bases/admin_base.html' %}
+
+{% block content_administrador %}
+
+    {% if current %}
+        <h2>Subasta vigente</h2>
+        {{ current }}
+    {% else %}
+        <h2>
+            <a class="btn btn-primary pull-right" href="{% url 'subastas:create' %}">Agregar Subasta</a>
+        </h2>
+    {% endif %}
+
+    <h2>Subastas pasadas</h2>
+    {% for subasta in object_list %}
+        {{ subasta }}
+    {% empty %}
+        No hay subastas
+    {% endfor %}
+
+{% endblock content_administrador %}
