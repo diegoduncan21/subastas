@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 
+
 class Rodado(models.Model):
     numero_inventario = models.IntegerField()
     caracteristicas = models.ForeignKey("Caracteristicas")

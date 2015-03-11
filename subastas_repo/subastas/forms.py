@@ -5,7 +5,31 @@ from django.core.urlresolvers import reverse
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Reset, Layout, Div
 
-from .models import Subasta
+from .models import Actas, Subasta
+
+
+class ActasForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ActasForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = "post"
+        self.helper.form_action = reverse("subastas:actas_create")
+        self.helper.add_input(Submit('job_submit', 'Guardar'))
+        self.helper.add_input(Reset('job_reset', 'Limpiar',
+                              css_class='btn-default'))
+        self.helper.layout = Layout(
+            Div('bien_rodado',
+                'persona',
+                'profesionales',
+                'descripcion')
+        )
+
+    class Meta:
+        fields = ['bien_rodado',
+                  'persona',
+                  'profesionales',
+                  'descripcion']
+        model = Actas
 
 
 class SubastaForm(forms.ModelForm):

@@ -4,18 +4,25 @@
 
     {% if current %}
         <h2>Subasta vigente</h2>
-        {{ current }}
+        {{ current.fecha_hora | date:'d/m/Y' }}
     {% else %}
         <h2>
+            no hay subasta vigente.
             <a class="btn btn-primary pull-right" href="{% url 'subastas:create' %}">Agregar Subasta</a>
         </h2>
     {% endif %}
 
     <h2>Subastas pasadas</h2>
-    {% for subasta in object_list %}
-        {{ subasta }}
-    {% empty %}
-        No hay subastas
-    {% endfor %}
+    <div class="list-group">
+        {% for subasta in object_list %}
+          <a href="#" class="list-group-item">
+            <h5 class="list-group-item-heading">
+              {{ subasta.fecha_hora | date:'d/m/Y' }}
+            </h5>
+          </a>
+        {% empty %}
+            No hay subastas
+        {% endfor %}
+    </div>
 
 {% endblock content_administrador %}

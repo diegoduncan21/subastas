@@ -12,8 +12,18 @@ urlpatterns = patterns('subastas.views',
         name='list'
     ),
     url(
-        regex=r'^subastas/create/$',
+        regex=r'^create/$',
         view=views.SubastaCreateView.as_view(),
         name='create'
+    ),
+    url(
+        regex=r'^actas$',
+        view=views.ActaListView.as_view(),
+        name='actas_list'
+    ),
+    url(
+        regex=r'^actas/create/$',
+        view=views.ActaCreateView.as_view(),
+        name='actas_create'
     ),
 )

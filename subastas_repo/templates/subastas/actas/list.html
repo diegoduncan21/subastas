@@ -1,0 +1,34 @@
+{% extends "subastas/bases/acreditador_actero_base.html" %}
+
+{% block content_acreditador_actero %}
+
+    <h2>
+        Actas vigentes
+        {% if current_subasta %}
+            <a class="btn btn-primary pull-right" href="{% url 'subastas:actas_create' %}">Agregar Acta</a>
+        {% endif %}
+    </h2>
+    <div class="list-group">
+        {% for acta in currents %}
+            <a href="#" class="list-group-item">
+                <h5 class="list-group-item-heading">
+                  {{ acta }}
+                </h5>
+              </a>
+        {% empty %}
+            No hay actas vigentes.
+        {% endfor %}
+    </div>
+    <h2>actas pasadas</h2>
+    <div class="list-group">
+        {% for acta in object_list %}
+          <a href="#" class="list-group-item">
+            <h5 class="list-group-item-heading">
+              {{ acta }}
+            </h5>
+          </a>
+        {% empty %}
+            No hay actas pasadas.
+        {% endfor %}
+    </div>
+{% endblock content_acreditador_actero%}
