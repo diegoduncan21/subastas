@@ -3,7 +3,26 @@
 {% load crispy_forms_tags %}
 
 {% block content_administrador %}
-
-    {% crispy form form.helper %}
-
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h1>
+                    {% block header %}
+                        {% if instance %}
+                            Modificar Subasta: {{ instance }}
+                        {% else %}
+                            Agregar Subasta
+                        {% endif %}
+                    {% endblock %}
+                </h1>
+              </div>
+              <div class="panel-body">
+                <div>
+                    {% crispy form form.helper %}
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
 {% endblock content_administrador %}

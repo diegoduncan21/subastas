@@ -17,6 +17,11 @@ urlpatterns = patterns('subastas.views',
         name='create'
     ),
     url(
+        regex=r'^edit/(?P<pk>\d+)$',
+        view=views.SubastaEditView.as_view(),
+        name='edit'
+    ),
+    url(
         regex=r'^actas$',
         view=views.ActaListView.as_view(),
         name='actas_list'

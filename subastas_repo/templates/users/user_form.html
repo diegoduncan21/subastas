@@ -6,34 +6,42 @@
 {% block content_administrador %}
     <div class="row">
         <div class="col-md-12">
-            <h1>
-                {% block header %}
-                    {% if instance %}
-                        Modificar usuario: {{ instance }}
-                    {% else %}
-                        Agregar Usuario
-                    {% endif %}
-                {% endblock %}
-            </h1>
-            <form class="form-horizontal" method="post"
-                  action="{% if instance %}
-                            {% url 'users:update' instance.id %}
-                          {% else %}
-                            {% url 'users:create' %}
-                          {% endif %}">
-                {% csrf_token %}
-                {{ form|crispy }}
-                <div class="control-group">
-                  <div class="controls">
-                    <button type="submit" class="btn btn-success">Aplicar</button>
-                    {% if instance %}
-                        <a href="{% url 'users:delete' instance.id %}" class="btn btn-danger">
-                            Eliminar
-                        </a>
-                    {% endif %}
-                  </div>
-                </div>
-            </form>
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h1>
+                    {% block header %}
+                        {% if instance %}
+                            Modificar usuario: {{ instance }}
+                        {% else %}
+                            Agregar Usuario
+                        {% endif %}
+                    {% endblock %}
+                </h1>
+              </div>
+              <div class="panel-body">
+                <form method="POST"
+                      class="form-horizontal"
+                      action="{% if instance %}
+                                {% url 'users:update' instance.id %}
+                              {% else %}
+                                {% url 'users:create' %}
+                              {% endif %}">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="control-group">
+                      <div class="controls">
+                        <button type="submit" class="btn btn-success">Aplicar</button>
+                        {% if instance %}
+                            <a href="{% url 'users:delete' instance.id %}" class="btn btn-danger">
+                                Eliminar
+                            </a>
+                        {% endif %}
+                      </div>
+                    </div>
+                </form>
+              </div>
+            </div>
+
         </div>
     </div>
 {% endblock content_administrador %}

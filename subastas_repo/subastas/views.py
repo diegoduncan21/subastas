@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views.generic import CreateView
 from django.views.generic import ListView
+from django.views.generic import UpdateView
 
 from braces.views import LoginRequiredMixin
 
@@ -40,11 +41,19 @@ class SubastaListView(LoginRequiredMixin, ListView):
 class SubastaCreateView(LoginRequiredMixin, CreateView):
     form_class = SubastaForm
     model = Subasta
-    template_name = 'subastas/form.html'
     success_url = reverse_lazy('subastas:list')
+    template_name = 'subastas/form.html'
 
     def form_valid(self, form):
         return super(SubastaCreateView, self).form_valid(form)
+
+
+class SubastaEditView(LoginRequiredMixin, UpdateView):
+    context_object_name = 'instance'
+    form_class = SubastaForm
+    model = Subasta
+    success_url = reverse_lazy('subastas:list')
+    template_name = 'subastas/form.html'
 
 
 class ActaListView(LoginRequiredMixin, ListView):

@@ -37,3 +37,8 @@
 .subasta-container {
   margin-top: 80px;
 }
+
+/* line 39, ../sass/project.scss */
+.form-horizontal {
+  padding: 10px 25px;
+}

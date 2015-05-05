@@ -4,7 +4,11 @@
 
     {% if current %}
         <h2>Subasta vigente</h2>
-        {{ current.fecha_hora | date:'d/m/Y' }}
+        <div class="list-group">
+            <a href="{% url 'subastas:edit' current.id %}" class="list-group-item list-group-item-success">
+                {{ current.fecha_hora | date:'d/m/Y' }}
+            </a>
+        </div>
     {% else %}
         <h2>
             no hay subasta vigente.
@@ -16,9 +20,7 @@
     <div class="list-group">
         {% for subasta in object_list %}
           <a href="#" class="list-group-item">
-            <h5 class="list-group-item-heading">
-              {{ subasta.fecha_hora | date:'d/m/Y' }}
-            </h5>
+            {{ subasta.fecha_hora | date:'d/m/Y' }}
           </a>
         {% empty %}
             No hay subastas
