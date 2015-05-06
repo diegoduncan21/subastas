@@ -34,6 +34,7 @@ class Common(Configuration):
         # 'django.contrib.humanize',
 
         # Admin
+        'grappelli',
         'django.contrib.admin',
     )
     THIRD_PARTY_APPS = (

@@ -8,8 +8,8 @@ from django.views.generic import UpdateView
 
 from braces.views import LoginRequiredMixin
 
-from .forms import ActasForm, SubastaForm
-from .models import Actas, Subasta
+from .forms import ActaForm, SubastaForm
+from .models import Acta, Subasta
 
 
 @login_required
@@ -57,13 +57,13 @@ class SubastaEditView(LoginRequiredMixin, UpdateView):
 
 
 class ActaListView(LoginRequiredMixin, ListView):
-    model = Actas
+    model = Acta
     template_name = 'subastas/actas/list.html'
     current_subasta = Subasta.get_current()
 
     def get_queryset(self):
         if self.current_subasta:
-            return Actas.objects.exclude(
+            return Acta.objects.exclude(
                 id__in=self.current_subasta.actas.values_list('id', flat=True))
         else:
             return None
@@ -77,7 +77,7 @@ class ActaListView(LoginRequiredMixin, ListView):
 
 
 class ActaCreateView(LoginRequiredMixin, CreateView):
-    form_class = ActasForm
-    model = Actas
+    form_class = ActaForm
+    model = Acta
     template_name = 'subastas/actas/form.html'
     success_url = reverse_lazy('subastas:actas_list')

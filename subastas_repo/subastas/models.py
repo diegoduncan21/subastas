@@ -4,7 +4,7 @@ from django.utils import timezone
 
 class Rodado(models.Model):
     numero_inventario = models.IntegerField()
-    caracteristicas = models.ForeignKey("Caracteristicas")
+    caracteristicas = models.ForeignKey("Caracteristica")
     modelo = models.IntegerField()
     chasis = models.CharField(max_length=15)
     motor = models.CharField(max_length=10)
@@ -18,7 +18,7 @@ class Rodado(models.Model):
         return "%s %s %s" % (self.chasis, self.motor, self.dominio)
 
 
-class Caracteristicas(models.Model):
+class Caracteristica(models.Model):
     marca = models.CharField(max_length=50)
     modelo = models.CharField(max_length=50)
     descripcion = models.TextField(blank=True, null=True)
@@ -30,6 +30,7 @@ class Caracteristicas(models.Model):
 class Subasta(models.Model):
     numero = models.IntegerField()
     fecha_hora = models.DateTimeField()
+    cerrado_el = models.DateTimeField(blank=True, null=True)
     decreto = models.CharField(max_length=10)
     domicilio = models.ForeignKey('personas.Domicilio')
 
@@ -37,18 +38,17 @@ class Subasta(models.Model):
     bienes = models.ManyToManyField(Rodado)
     personas = models.ManyToManyField('personas.Persona',
                                       blank=True, null=True)
-    actas = models.ManyToManyField('Actas', blank=True, null=True)
+    actas = models.ManyToManyField('Acta', blank=True, null=True)
 
     def __unicode__(self):
         return "%s %s" % (self.numero, self.decreto)
 
     @classmethod
     def get_current(self):
-        return self.objects \
-            .filter(fecha_hora__day=timezone.now().day).last()
+        return None
 
 
-class Actas(models.Model):
+class Acta(models.Model):
     bien_rodado = models.ForeignKey(Rodado)
     persona = models.ForeignKey('personas.Persona')
     profesionales = models.ManyToManyField('personas.Profesional')

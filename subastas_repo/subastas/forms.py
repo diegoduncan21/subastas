@@ -5,10 +5,10 @@ from django.core.urlresolvers import reverse
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Reset, Layout, Div
 
-from .models import Actas, Subasta
+from .models import Acta, Subasta
 
 
-class ActasForm(forms.ModelForm):
+class ActaForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ActasForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
@@ -29,7 +29,7 @@ class ActasForm(forms.ModelForm):
                   'persona',
                   'profesionales',
                   'descripcion']
-        model = Actas
+        model = Acta
 
 
 class SubastaForm(forms.ModelForm):

@@ -1,0 +1,68 @@
+[
+{
+  "fields": {
+    "name": "administradores",
+    "permissions": [
+      1,
+      2,
+      3,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      64,
+      65,
+      66,
+      58,
+      59,
+      60,
+      55,
+      56,
+      57,
+      61,
+      62,
+      63,
+      37,
+      38,
+      39
+    ]
+  },
+  "model": "auth.group",
+  "pk": 1
+},
+{
+  "fields": {
+    "name": "acreditadores",
+    "permissions": [
+      43,
+      44,
+      45,
+      46,
+      47,
+      48
+    ]
+  },
+  "model": "auth.group",
+  "pk": 2
+},
+{
+  "fields": {
+    "name": "acteros",
+    "permissions": [
+      64,
+      65,
+      66
+    ]
+  },
+  "model": "auth.group",
+  "pk": 3
+}
+]

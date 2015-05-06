@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Actas, Caracteristicas, Rodado, Subasta
+from .models import Acta, Caracteristica, Rodado, Subasta
 
 
 class ActaAdmin(admin.ModelAdmin):
@@ -10,7 +10,7 @@ class ActaAdmin(admin.ModelAdmin):
 class SubastaAdmin(admin.ModelAdmin):
     filter_horizontal = ('actas', 'bienes', 'personas', 'profesionales')
 
-admin.site.register(Actas, ActaAdmin)
-admin.site.register(Caracteristicas)
+admin.site.register(Acta, ActaAdmin)
+admin.site.register(Caracteristica)
 admin.site.register(Rodado)
 admin.site.register(Subasta, SubastaAdmin)

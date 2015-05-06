@@ -39,6 +39,9 @@ class Profesional(models.Model):
     def __unicode__(self):
         return "%s, %s" % (self.nombres, self.apellidos)
 
+    class Meta:
+        verbose_name_plural = 'Profesionales'
+
 
 class Domicilio(models.Model):
     direccion = models.CharField(max_length=80)
@@ -55,3 +58,6 @@ class Localidad(models.Model):
 
     def __unicode__(self):
         return "%s (%s)" % (self.nombre, self.codigo_postal)
+
+    class Meta:
+        verbose_name_plural = 'Localidades'
