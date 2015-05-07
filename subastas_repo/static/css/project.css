@@ -42,3 +42,8 @@
 .form-horizontal {
   padding: 10px 25px;
 }
+
+/* line 43, ../sass/project.scss */
+#AcreditadoresTab {
+  margin-bottom: 20px;
+}

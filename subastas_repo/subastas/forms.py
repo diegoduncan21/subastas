@@ -10,9 +10,9 @@ from .models import Acta, Subasta
 
 class ActaForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        super(ActasForm, self).__init__(*args, **kwargs)
+        super(ActaForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.form_method = "post"
+        self.helper.form_method = "POST"
         self.helper.form_action = reverse("subastas:actas_create")
         self.helper.add_input(Submit('job_submit', 'Guardar'))
         self.helper.add_input(Reset('job_reset', 'Limpiar',

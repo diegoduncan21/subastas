@@ -8,17 +8,14 @@ class Persona(models.Model):
     apellidos = models.CharField(max_length=100, blank=True, null=True)
     razon_social = models.CharField(max_length=100, blank=True, null=True)
 
-    dni = models.CharField(max_length=10, blank=True, null=True)
+    dni = models.CharField(max_length=10, blank=True, null=True, unique=True)
     cuit = models.CharField(max_length=15, blank=True, null=True)
 
     domicilio = models.ForeignKey("Domicilio")
     telefono = models.CharField(max_length=20)
 
     def __unicode__(self):
-        if not self.razon_social:
-            return "%s, %s" % (self.nombres, self.apellidos)
-        else:
-            return "%s" % (self.razon_social)
+        return "%s, %s" % (self.nombres, self.apellidos)
 
 
 class Profesional(models.Model):

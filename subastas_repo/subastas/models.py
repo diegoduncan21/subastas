@@ -43,9 +43,15 @@ class Subasta(models.Model):
     def __unicode__(self):
         return "%s %s" % (self.numero, self.decreto)
 
-    @classmethod
-    def get_current(self):
-        return None
+    @property
+    def current(self):
+        return Subasta.objects \
+            .filter(fecha_hora__day=timezone.now().day,
+                    cerrado_el=None).last()
+
+    def close(self):
+        self.cerrado_el = timezone.now()
+        self.save()
 
 
 class Acta(models.Model):

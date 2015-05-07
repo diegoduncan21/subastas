@@ -1,13 +1,42 @@
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import CreateView
 from django.views.generic import DeleteView
 from django.views.generic import ListView
 from django.views.generic import UpdateView
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render, redirect
 
 from braces.views import LoginRequiredMixin
 
-from .models import Profesional
+from .models import Persona, Profesional
+from subastas.models import Subasta
+
+
+@login_required
+def asociar(request, subasta_id, persona_id):
+    subasta = get_object_or_404(Subasta, pk=subasta_id)
+    persona = get_object_or_404(Persona, pk=persona_id)
+    if subasta.personas.filter(id=persona.id).exists():
+        msg = 'Esa persona ya esta inscripta.'
+    else:
+        subasta.personas.add(persona)
+        msg = 'Inscripcion exitosa.'
+    messages.add_message(request,
+                         messages.INFO,
+                         msg)
+    return redirect(reverse_lazy('subastas:acreditadores')+'?tab=search')
+
+
+@login_required
+def desasociar(request, subasta_id, persona_id):
+    subasta = get_object_or_404(Subasta, pk=subasta_id)
+    persona = get_object_or_404(Persona, pk=persona_id)
+    subasta.personas.remove(persona)
+    messages.add_message(request,
+                         messages.INFO,
+                         'Se borro la inscripcion exitosamente.')
+    return redirect(reverse_lazy('subastas:acreditadores')+'?tab=search')
 
 
 class ProfesionalListView(LoginRequiredMixin, ListView):
