@@ -9,6 +9,12 @@ from .models import Persona, Profesional
 
 class ProfesionalForm(forms.ModelForm):
     class Meta:
+        fields = ["nombres",
+                  "apellidos",
+                  "dni",
+                  "titulo",
+                  "matricula",
+                  "telefono"]
         model = Profesional
 
 

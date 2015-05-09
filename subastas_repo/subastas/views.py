@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse, reverse_lazy
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.views.generic import CreateView
@@ -34,7 +35,9 @@ class SubastaListView(LoginRequiredMixin, ListView):
     template_name = 'subastas/list.html'
 
     def get_queryset(self):
-        return Subasta.objects.filter(cerrado_el__lt=timezone.now())
+        return Subasta.objects.filter(Q(cerrado_el__lt=timezone.now()) |
+                                      Q(fecha_hora__lt=timezone.now())) \
+                              .exclude(fecha_hora__day=timezone.now().day)
 
     def get_context_data(self, **kwargs):
         context = super(SubastaListView, self).get_context_data(**kwargs)
@@ -126,3 +129,6 @@ class AcreditadorHomeView(LoginRequiredMixin, FormView):
                              messages.INFO,
                              'Inscripcion exitosa.')
         return redirect(reverse_lazy("subastas:acreditadores"))
+
+    def form_invalid(self, form):
+        return super(AcreditadorHomeView, self).form_invalid(form)

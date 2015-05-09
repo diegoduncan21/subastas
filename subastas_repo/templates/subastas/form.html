@@ -14,7 +14,11 @@
                         {% else %}
                             Agregar Subasta
                         {% endif %}
-                        <a href="{% url 'subastas:close' instance.id %}" class="btn btn-danger pull-right">Cerrar subasta</a>
+                        {% if instance %}
+                            <a href="{% url 'subastas:close' instance.id %}" class="btn btn-danger pull-right">
+                                Cerrar subasta
+                            </a>
+                        {% endif %}
                     {% endblock %}
                 </h1>
               </div>
