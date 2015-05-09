@@ -18,31 +18,37 @@
             <div class="col-md-4">
 
                 <ul class="nav nav-tabs" role="tablist" id="AcreditadoresTab">
-                  <li role="presentation" class="{% if tab == 'add' %} active {% endif %}%">
-                    <a href="#add" aria-controls="add" role="tab" data-toggle="tab">Inscribir</a>
-                  </li>
                   <li role="presentation" class="{% if tab == 'search' %} active {% endif %}%">
                     <a href="#search" aria-controls="search" role="tab" data-toggle="tab">Buscar pasados</a>
+                  </li>
+                  <li role="presentation" class="{% if tab == 'add' %} active {% endif %}%">
+                    <a href="#add" aria-controls="add" role="tab" data-toggle="tab">Inscribir</a>
                   </li>
                 </ul>
 
                 <div class="tab-content">
+                  <div role="tabpanel" class="tab-pane {% if tab == 'search' %} active {% endif %}" id="search">
+                    <form method="POST" action="#">{% csrf_token %}
+                      <h4>{{ form_inscriptions.personas.label }}</h4>
+
+                      <input type="submit" class="btn btn-primary pull-right" value="Inscribir">
+
+                      <hr style="clear:both;">
+
+                      <ul class="list-group">
+                        {% for checkbox in form_inscriptions.personas %}
+                            <li class="list-group-item">
+                            {{ checkbox.choice_label }}
+                            <span class="pull-right">{{ checkbox.tag }} </span>
+                            </li>
+                        {% endfor %}
+                      </ul>
+                    </form>
+                  </div>
+
                   <div role="tabpanel" class="tab-pane {% if tab == 'add' %} active {% endif %}%" id="add">
                     {% crispy form form.helper %}
                     <hr>
-                  </div>
-
-                  <div role="tabpanel" class="tab-pane {% if tab == 'search' %} active {% endif %}" id="search">
-                    <ul class="list-group">
-                        {% for persona in personas_all %}
-                            <li class="list-group-item">
-                              {{ persona.apellidos }} {{ persona.nombres }} ({{ persona.dni }})
-                              <a class="pull-right" href="{% url 'personas:asociar' current_subasta.id persona.id %}">
-                                <i class="fa fa-plus"></i>
-                              </a>
-                            </li>
-                        {% endfor %}
-                    </ul>
                   </div>
                 </div>
             </div>

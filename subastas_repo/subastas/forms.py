@@ -6,6 +6,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Reset, Layout, Div
 
 from .models import Acta, Subasta
+from personas.models import Persona
 
 
 class ActaForm(forms.ModelForm):
@@ -58,4 +59,16 @@ class SubastaForm(forms.ModelForm):
                   'domicilio',
                   'profesionales',
                   'bienes']
+        model = Subasta
+
+
+class InscriptionForm(forms.ModelForm):
+    personas = forms.ModelMultipleChoiceField(Persona.objects.exclude(
+                                              id__in=Subasta.get_current().personas.values_list('id', flat=True)),
+                                              label='Inscriptos de subastas anteriores.',
+                                              required=True,
+                                              widget=forms.CheckboxSelectMultiple())
+
+    class Meta:
+        fields = ['personas']
         model = Subasta

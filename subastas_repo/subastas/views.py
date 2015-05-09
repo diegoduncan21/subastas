@@ -13,7 +13,7 @@ from braces.views import LoginRequiredMixin
 
 from personas.forms import PersonaForm
 from personas.models import Persona
-from .forms import ActaForm, SubastaForm
+from .forms import ActaForm, InscriptionForm, SubastaForm
 from .models import Acta, Subasta
 
 
@@ -30,7 +30,7 @@ def home(request):
 
 
 class SubastaListView(LoginRequiredMixin, ListView):
-    current_subasta = Subasta.current
+    current_subasta = Subasta.get_current()
     model = Subasta
     template_name = 'subastas/list.html'
 
@@ -77,7 +77,7 @@ def cerrar_subasta(request, subasta_id):
 
 
 class ActaListView(LoginRequiredMixin, ListView):
-    current_subasta = Subasta.current
+    current_subasta = Subasta.get_current()
     model = Acta
     template_name = 'subastas/actas/list.html'
 
@@ -104,7 +104,7 @@ class ActaCreateView(LoginRequiredMixin, CreateView):
 
 
 class AcreditadorHomeView(LoginRequiredMixin, FormView):
-    current_subasta = Subasta.current
+    current_subasta = Subasta.get_current()
     form_class = PersonaForm
     model = Persona
     success_url = reverse_lazy('subastas:acreditadores')
@@ -116,10 +116,9 @@ class AcreditadorHomeView(LoginRequiredMixin, FormView):
             context['current_subasta'] = self.current_subasta
             context['personas'] = self.current_subasta.personas.all() \
                 .order_by('apellidos')
-            context['personas_all'] = Persona.objects.exclude(
-                id__in=self.current_subasta.personas.values_list('id', flat=True))
+            context['form_inscriptions'] = InscriptionForm()
 
-            context['tab'] = self.request.GET.get('tab', 'add')
+            context['tab'] = self.request.GET.get('tab', 'search')
         return context
 
     def form_valid(self, form):

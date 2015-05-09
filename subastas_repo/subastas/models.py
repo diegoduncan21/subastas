@@ -43,6 +43,12 @@ class Subasta(models.Model):
     def __unicode__(self):
         return "%s %s" % (self.numero, self.decreto)
 
+    @staticmethod
+    def get_current():
+        return Subasta.objects \
+            .filter(fecha_hora__day=timezone.now().day,
+                    cerrado_el=None).last()
+
     @property
     def current(self):
         return Subasta.objects \

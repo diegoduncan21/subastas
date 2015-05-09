@@ -9,22 +9,20 @@ from django.shortcuts import get_object_or_404, render, redirect
 
 from braces.views import LoginRequiredMixin
 
-from .models import Persona, Profesional
+from subastas.forms import InscriptionForm
 from subastas.models import Subasta
+from .models import Persona, Profesional
 
 
 @login_required
-def asociar(request, subasta_id, persona_id):
-    subasta = get_object_or_404(Subasta, pk=subasta_id)
-    persona = get_object_or_404(Persona, pk=persona_id)
-    if subasta.personas.filter(id=persona.id).exists():
-        msg = 'Esa persona ya esta inscripta.'
-    else:
-        subasta.personas.add(persona)
-        msg = 'Inscripcion exitosa.'
-    messages.add_message(request,
-                         messages.INFO,
-                         msg)
+def asociar(request, subasta_id):
+    if request.method == "POST":
+        form = InscriptionForm(request.POST)
+        if form.is_valid():
+            form.save()
+        messages.add_message(request,
+                             messages.INFO,
+                             msg)
     return redirect(reverse_lazy('subastas:acreditadores')+'?tab=search')
 
 
