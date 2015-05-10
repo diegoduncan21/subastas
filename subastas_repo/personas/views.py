@@ -16,10 +16,15 @@ from .models import Persona, Profesional
 
 @login_required
 def asociar(request, subasta_id):
+    subasta = get_object_or_404(Subasta, pk=subasta_id)
     if request.method == "POST":
-        form = InscriptionForm(request.POST)
+        form = InscriptionForm(request.POST, instance=subasta)
         if form.is_valid():
-            form.save()
+            personas = form.cleaned_data.get('personas')
+            subasta.personas.add(*personas)
+            msg = 'Usuarios agregados exitosamente.'
+        else:
+            msg = 'No tiene personas tildadas.'
         messages.add_message(request,
                              messages.INFO,
                              msg)

@@ -19,7 +19,7 @@
 
                 <ul class="nav nav-tabs" role="tablist" id="AcreditadoresTab">
                   <li role="presentation" class="{% if tab == 'search' %} active {% endif %}%">
-                    <a href="#search" aria-controls="search" role="tab" data-toggle="tab">Buscar pasados</a>
+                    <a href="#search" aria-controls="search" role="tab" data-toggle="tab">Buscar inscriptos pasados</a>
                   </li>
                   <li role="presentation" class="{% if tab == 'add' %} active {% endif %}%">
                     <a href="#add" aria-controls="add" role="tab" data-toggle="tab">Inscribir</a>
@@ -28,7 +28,7 @@
 
                 <div class="tab-content">
                   <div role="tabpanel" class="tab-pane {% if tab == 'search' %} active {% endif %}" id="search">
-                    <form method="POST" action="#">{% csrf_token %}
+                    <form method="POST" action="{% url 'personas:asociar' current_subasta.id %}">{% csrf_token %}
                       <h4>{{ form_inscriptions.personas.label }}</h4>
 
                       <input type="submit" class="btn btn-primary pull-right" value="Inscribir">

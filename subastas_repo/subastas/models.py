@@ -49,12 +49,6 @@ class Subasta(models.Model):
             .filter(fecha_hora__day=timezone.now().day,
                     cerrado_el=None).last()
 
-    @property
-    def current(self):
-        return Subasta.objects \
-            .filter(fecha_hora__day=timezone.now().day,
-                    cerrado_el=None).last()
-
     def close(self):
         self.cerrado_el = timezone.now()
         self.save()

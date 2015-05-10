@@ -6,7 +6,7 @@ from personas import views
 
 urlpatterns = patterns('',
     url(
-        regex=r'^asociar/(?P<subasta_id>\d+)/(?P<persona_id>\d+)$',
+        regex=r'^asociar/(?P<subasta_id>\d+)$',
         view=views.asociar,
         name='asociar'
     ),
