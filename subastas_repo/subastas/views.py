@@ -30,18 +30,18 @@ def home(request):
 
 
 class SubastaListView(LoginRequiredMixin, ListView):
-    current_subasta = Subasta.get_current()
     model = Subasta
     template_name = 'subastas/list.html'
 
     def get_queryset(self):
+        """Subastas anteriores o cerradas"""
         return Subasta.objects.filter(Q(cerrado_el__lt=timezone.now()) |
                                       Q(fecha_hora__lt=timezone.now())) \
                               .exclude(fecha_hora__day=timezone.now().day)
 
     def get_context_data(self, **kwargs):
         context = super(SubastaListView, self).get_context_data(**kwargs)
-        context['current'] = self.current_subasta
+        context['current'] = Subasta.objects.get_current()
         return context
 
 
@@ -77,11 +77,11 @@ def cerrar_subasta(request, subasta_id):
 
 
 class ActaListView(LoginRequiredMixin, ListView):
-    current_subasta = Subasta.get_current()
     model = Acta
     template_name = 'subastas/actas/list.html'
 
     def get_queryset(self):
+        self.current_subasta = Subasta.objects.get_current()
         if self.current_subasta:
             return Acta.objects.exclude(
                 id__in=self.current_subasta.actas.values_list('id', flat=True))
@@ -89,6 +89,7 @@ class ActaListView(LoginRequiredMixin, ListView):
             return None
 
     def get_context_data(self, **kwargs):
+        self.current_subasta = Subasta.objects.get_current()
         context = super(ActaListView, self).get_context_data(**kwargs)
         if self.current_subasta:
             context['current_subasta'] = self.current_subasta
@@ -104,24 +105,26 @@ class ActaCreateView(LoginRequiredMixin, CreateView):
 
 
 class AcreditadorHomeView(LoginRequiredMixin, FormView):
-    current_subasta = Subasta.get_current()
     form_class = PersonaForm
     model = Persona
     success_url = reverse_lazy('subastas:acreditadores')
     template_name = 'subastas/acreditador_home.html'
 
     def get_context_data(self, **kwargs):
+        self.current_subasta = Subasta.objects.get_current()
         context = super(AcreditadorHomeView, self).get_context_data(**kwargs)
         if self.current_subasta:
             context['current_subasta'] = self.current_subasta
             context['personas'] = self.current_subasta.personas.all() \
                 .order_by('apellidos')
-            context['form_inscriptions'] = InscriptionForm()
+            context['form_inscriptions'] = InscriptionForm(
+                instance=self.current_subasta)
 
             context['tab'] = self.request.GET.get('tab', 'search')
         return context
 
     def form_valid(self, form):
+        self.current_subasta = Subasta.objects.get_current()
         persona_acreditada = form.save()
         self.current_subasta.personas.add(persona_acreditada)
         messages.add_message(self.request,

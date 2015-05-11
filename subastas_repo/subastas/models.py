@@ -27,6 +27,13 @@ class Caracteristica(models.Model):
         return "%s %s" % (self.marca, self.modelo)
 
 
+class SubastaManager(models.Manager):
+    def get_current(self):
+        return super(SubastaManager, self).get_queryset() \
+            .filter(fecha_hora__day=timezone.now().day,
+                    cerrado_el=None).last()
+
+
 class Subasta(models.Model):
     numero = models.IntegerField()
     fecha_hora = models.DateTimeField()
@@ -40,14 +47,10 @@ class Subasta(models.Model):
                                       blank=True, null=True)
     actas = models.ManyToManyField('Acta', blank=True, null=True)
 
+    objects = SubastaManager()
+
     def __unicode__(self):
         return "%s %s" % (self.numero, self.decreto)
-
-    @staticmethod
-    def get_current():
-        return Subasta.objects \
-            .filter(fecha_hora__day=timezone.now().day,
-                    cerrado_el=None).last()
 
     def close(self):
         self.cerrado_el = timezone.now()

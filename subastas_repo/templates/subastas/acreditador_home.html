@@ -59,7 +59,7 @@
                 <ul class="list-group">
                     {% for persona in personas %}
                         <li class="list-group-item">
-                            {{ persona.apellidos }} {{ persona.nombres }} ({{ persona.dni }})
+                            {{ persona }}
                             <a class="pull-right" href="{% url 'personas:desasociar' current_subasta.id persona.id %}">
                               <i class="fa fa-trash"></i>
                             </a>

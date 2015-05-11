@@ -15,7 +15,7 @@ class Persona(models.Model):
     telefono = models.CharField(max_length=20)
 
     def __unicode__(self):
-        return "%s, %s" % (self.nombres, self.apellidos)
+        return "%s, %s (%s)" % (self.apellidos, self.nombres, self.dni)
 
 
 class Profesional(models.Model):

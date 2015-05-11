@@ -63,8 +63,7 @@ class SubastaForm(forms.ModelForm):
 
 
 class InscriptionForm(forms.ModelForm):
-    personas = forms.ModelMultipleChoiceField(Persona.objects.exclude(
-                                              id__in=Subasta.get_current().personas.values_list('id', flat=True)),
+    personas = forms.ModelMultipleChoiceField(Persona.objects.all(),
                                               label='Inscriptos de subastas anteriores.',
                                               required=True,
                                               widget=forms.CheckboxSelectMultiple())
@@ -72,3 +71,11 @@ class InscriptionForm(forms.ModelForm):
     class Meta:
         fields = ['personas']
         model = Subasta
+
+    def __init__(self, *args, **kwargs):
+        current_subasta = kwargs.pop('instance')
+        super(InscriptionForm, self).__init__(*args, **kwargs)
+        choices = Persona.objects.exclude(
+            id__in=current_subasta.personas.values_list('id', flat=True)) \
+            .order_by('apellidos')
+        self.fields['personas'].queryset = choices
