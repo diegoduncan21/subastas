@@ -7,7 +7,15 @@
         <div class="list-group">
             <a href="{% url 'subastas:edit' current.id %}" class="list-group-item list-group-item-success">
                 {{ current.fecha_hora | date:'d/m/Y' }}
-                <span class="pull-right">inscriptos: {{ current.personas.count }}</span>
+                <span class="badge pull-right">
+                    Actas: {{ current.actas.count }}
+                </span>
+                <span class="badge pull-right">
+                    Rodados: {{ current.bienes.count }}
+                </span>
+                <span class="badge pull-right">
+                    Inscriptos: {{ current.personas.count }}
+                </span>
             </a>
         </div>
     {% else %}
@@ -22,7 +30,15 @@
         {% for subasta in object_list %}
           <a href="#" class="list-group-item">
             {{ subasta.fecha_hora | date:'d/m/Y' }}
-            <span class="pull-right">inscriptos: {{ subasta.personas.count }}
+            <span class="badge pull-right">
+                Actas: {{ subasta.actas.count }}
+            </span>
+            <span class="badge pull-right">
+                Rodados: {{ subasta.bienes.count }}
+            </span>
+            <span class="badge pull-right">
+                Inscriptos: {{ subasta.personas.count }}
+            </span>
           </a>
         {% empty %}
             No hay subastas

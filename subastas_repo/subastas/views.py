@@ -83,8 +83,7 @@ class ActaListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         self.current_subasta = Subasta.objects.get_current()
         if self.current_subasta:
-            return Acta.objects.exclude(
-                id__in=self.current_subasta.actas.values_list('id', flat=True))
+            return self.current_subasta.actas.all()
         else:
             return None
 
@@ -93,7 +92,6 @@ class ActaListView(LoginRequiredMixin, ListView):
         context = super(ActaListView, self).get_context_data(**kwargs)
         if self.current_subasta:
             context['current_subasta'] = self.current_subasta
-            context['currents'] = self.current_subasta.actas.all()
         return context
 
 
@@ -102,6 +100,15 @@ class ActaCreateView(LoginRequiredMixin, CreateView):
     model = Acta
     template_name = 'subastas/actas/form.html'
     success_url = reverse_lazy('subastas:actas')
+
+    def form_valid(self, form):
+        self.current_subasta = Subasta.objects.get_current()
+        acta_nueva = form.save()
+        self.current_subasta.actas.add(acta_nueva)
+        messages.add_message(self.request,
+                             messages.INFO,
+                             'Acta agregada exitosamente.')
+        return super(ActaCreateView, self).form_valid(form)
 
 
 class AcreditadorHomeView(LoginRequiredMixin, FormView):
@@ -118,7 +125,7 @@ class AcreditadorHomeView(LoginRequiredMixin, FormView):
             context['personas'] = self.current_subasta.personas.all() \
                 .order_by('apellidos')
 
-            query = self.request.GET.get('q', None)
+            query = self.request.GET.get('q', '')
             context['form_inscriptions'] = InscriptionForm(
                 instance=self.current_subasta, query=query)
 

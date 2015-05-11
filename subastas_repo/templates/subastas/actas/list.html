@@ -3,23 +3,11 @@
 {% block content_acreditador_actero %}
 
     <h2>
-        Actas vigentes
+        Actas
         {% if current_subasta %}
             <a class="btn btn-primary pull-right" href="{% url 'subastas:actas_create' %}">Agregar Acta</a>
         {% endif %}
     </h2>
-    <div class="list-group">
-        {% for acta in currents %}
-            <a href="#" class="list-group-item">
-                <h5 class="list-group-item-heading">
-                  {{ acta }}
-                </h5>
-              </a>
-        {% empty %}
-            No hay actas vigentes.
-        {% endfor %}
-    </div>
-    <h2>actas</h2>
     <div class="list-group">
         {% for acta in object_list %}
           <a href="#" class="list-group-item">
