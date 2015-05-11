@@ -1,6 +1,6 @@
 from django import forms
-
 from django.core.urlresolvers import reverse
+from django.db.models import Q
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Reset, Layout, Div
@@ -73,9 +73,14 @@ class InscriptionForm(forms.ModelForm):
         model = Subasta
 
     def __init__(self, *args, **kwargs):
-        current_subasta = kwargs.pop('instance')
+        current_subasta = kwargs.pop('instance', None)
+        query = kwargs.pop('query', None)
         super(InscriptionForm, self).__init__(*args, **kwargs)
-        choices = Persona.objects.exclude(
-            id__in=current_subasta.personas.values_list('id', flat=True)) \
-            .order_by('apellidos')
-        self.fields['personas'].queryset = choices
+
+        personas = Persona.objects.exclude(
+            id__in=current_subasta.personas.values_list('id', flat=True))
+        if query:
+            personas = personas.filter(Q(nombres__icontains=query) |
+                                       Q(apellidos__icontains=query) |
+                                       Q(dni__icontains=query))
+        self.fields['personas'].queryset = personas.order_by('apellidos')

@@ -19,7 +19,7 @@
             No hay actas vigentes.
         {% endfor %}
     </div>
-    <h2>actas pasadas</h2>
+    <h2>actas</h2>
     <div class="list-group">
         {% for acta in object_list %}
           <a href="#" class="list-group-item">
@@ -28,7 +28,7 @@
             </h5>
           </a>
         {% empty %}
-            No hay actas pasadas.
+            No hay actas.
         {% endfor %}
     </div>
 {% endblock content_acreditador_actero%}

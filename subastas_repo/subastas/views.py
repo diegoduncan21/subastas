@@ -101,7 +101,7 @@ class ActaCreateView(LoginRequiredMixin, CreateView):
     form_class = ActaForm
     model = Acta
     template_name = 'subastas/actas/form.html'
-    success_url = reverse_lazy('subastas:actas_list')
+    success_url = reverse_lazy('subastas:actas')
 
 
 class AcreditadorHomeView(LoginRequiredMixin, FormView):
@@ -117,10 +117,13 @@ class AcreditadorHomeView(LoginRequiredMixin, FormView):
             context['current_subasta'] = self.current_subasta
             context['personas'] = self.current_subasta.personas.all() \
                 .order_by('apellidos')
+
+            query = self.request.GET.get('q', None)
             context['form_inscriptions'] = InscriptionForm(
-                instance=self.current_subasta)
+                instance=self.current_subasta, query=query)
 
             context['tab'] = self.request.GET.get('tab', 'search')
+            context['query'] = query
         return context
 
     def form_valid(self, form):

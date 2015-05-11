@@ -5,6 +5,7 @@
 {% block content_acreditador_actero %}
     {% if current_subasta %}
         <div class="panel panel-default text-center">
+
           <div class="panel-heading">
             <h3>
                 Subasta N° {{ current_subasta.numero }}
@@ -14,6 +15,7 @@
             </h3>
             <h4>Inscripciones</h4>
           </div>
+
           <div class="panel-body">
             <div class="col-md-4">
 
@@ -28,10 +30,30 @@
 
                 <div class="tab-content">
                   <div role="tabpanel" class="tab-pane {% if tab == 'search' %} active {% endif %}" id="search">
-                    <form method="POST" action="{% url 'personas:asociar' current_subasta.id %}">{% csrf_token %}
-                      <h4>{{ form_inscriptions.personas.label }}</h4>
+                    <h4>{{ form_inscriptions.personas.label }}</h4>
 
-                      <input type="submit" class="btn btn-primary pull-right" value="Inscribir">
+                    <form action="{% url 'subastas:acreditadores' %}">
+
+                      <div class="input-group">
+                        <input type="text"
+                               class="form-control"
+                               placeholder="Buscar por nombre, apellido o dni..."
+                               name="q"
+                               value="{{ query }}">
+                        <span class="input-group-btn">
+                          <button type="submit"
+                                 class="btn btn-default">
+                                 <i class="fa fa-search"></i>
+                          </button>
+                        </span>
+                      </div>
+                    </form>
+
+                    <hr style="clear:both;">
+
+                    <form method="POST" action="{% url 'personas:asociar' current_subasta.id %}">{% csrf_token %}
+
+                      <input type="submit" class="btn btn-success btn-lg btn-block" value="Inscribir">
 
                       <hr style="clear:both;">
 
@@ -54,15 +76,18 @@
             </div>
             <div class="col-md-8">
                 <div class="well well-sm">
-                  Personas inscriptas: {{ personas.count }}
+                  Personas inscriptas:
+                  <span class="badge">{{ personas.count }}</span>
                 </div>
                 <ul class="list-group">
                     {% for persona in personas %}
                         <li class="list-group-item">
                             {{ persona }}
-                            <a class="pull-right" href="{% url 'personas:desasociar' current_subasta.id persona.id %}">
-                              <i class="fa fa-trash"></i>
-                            </a>
+                            <div class="btn-group pull-right" style="margin: -5px 0px;">
+                              <a class="btn btn-sm btn-danger pull-right" href="{% url 'personas:desasociar' current_subasta.id persona.id %}">
+                                <i class="fa fa-trash"></i>
+                              </a>
+                            </div>
                         </li>
                     {% endfor %}
                 </ul>
