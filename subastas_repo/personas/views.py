@@ -9,6 +9,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 
 from braces.views import LoginRequiredMixin
 
+from personas.forms import ProfesionalForm
 from subastas.forms import InscriptionForm
 from subastas.models import Subasta
 from .models import Persona, Profesional
@@ -51,6 +52,7 @@ class ProfesionalListView(LoginRequiredMixin, ListView):
 
 
 class ProfesionalCreateView(LoginRequiredMixin, CreateView):
+    form_class = ProfesionalForm
     model = Profesional
     template_name = 'personas/profesionales/form.html'
     success_url = reverse_lazy('personas:profesionales_list')
@@ -58,6 +60,7 @@ class ProfesionalCreateView(LoginRequiredMixin, CreateView):
 
 class ProfesionalUpdateView(LoginRequiredMixin, UpdateView):
     context_object_name = 'instance'
+    form_class = ProfesionalForm
     model = Profesional
     template_name = 'personas/profesionales/form.html'
     success_url = reverse_lazy('personas:profesionales_list')

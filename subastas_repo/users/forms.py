@@ -25,7 +25,8 @@ class CreateUserForm(forms.ModelForm):
                                                          'actero',
                                                          'administrador']))
     password = forms.CharField(widget=forms.PasswordInput())
-    password2 = forms.CharField(widget=forms.PasswordInput())
+    password2 = forms.CharField(label='Repetir password',
+                                widget=forms.PasswordInput())
 
     def __init__(self, *args, **kwargs):
         super(CreateUserForm, self).__init__(*args, **kwargs)

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*- 
+
 from django import forms
 from django.core.urlresolvers import reverse
 
@@ -8,6 +10,11 @@ from .models import Persona, Profesional
 
 
 class ProfesionalForm(forms.ModelForm):
+    matricula = forms.CharField(label='Número Matrícula')
+    dni = forms.CharField(label='DNI')
+    titulo =  forms.CharField(label="Título")
+    telefono = forms.CharField(label="Teléfono")
+
     class Meta:
         fields = ["nombres",
                   "apellidos",

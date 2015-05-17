@@ -42,6 +42,9 @@ class SubastaListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(SubastaListView, self).get_context_data(**kwargs)
         context['current'] = Subasta.objects.get_current()
+        next_subastas = Subasta.objects.filter(fecha_hora__gt=timezone.now()) \
+                                       .exclude(fecha_hora__day=timezone.now().day)
+        context['next_subastas'] = next_subastas
         return context
 
 
