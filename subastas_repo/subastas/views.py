@@ -13,8 +13,8 @@ from braces.views import LoginRequiredMixin
 
 from personas.forms import PersonaForm
 from personas.models import Persona
-from .forms import ActaForm, InscriptionForm, SubastaForm
-from .models import Acta, Subasta
+from .forms import ActaForm, InscriptionForm, RodadoForm, SubastaForm
+from .models import Acta, Rodado, Subasta
 
 
 @login_required
@@ -25,6 +25,8 @@ def home(request):
         url = 'subastas:acreditadores'
     elif request.user.groups.filter(name="acteros").exists():
         url = 'subastas:actas'
+    else:
+        url = 'subastas:sin_permisos'
 
     return redirect(reverse(url))
 
@@ -147,3 +149,38 @@ class AcreditadorHomeView(LoginRequiredMixin, FormView):
 
     def form_invalid(self, form):
         return super(AcreditadorHomeView, self).form_invalid(form)
+
+
+class RodadoListView(LoginRequiredMixin, ListView):
+    model = Rodado
+    template_name = 'subastas/rodados/list.html'
+
+    def get_queryset(self):
+        """Bienes sin subastar"""
+        return Rodado.objects.no_subastados()
+
+    def get_context_data(self, **kwargs):
+        context = super(RodadoListView, self).get_context_data(**kwargs)
+        context['current_subasta'] = Subasta.objects.get_current()
+        return context
+
+
+class RodadoCreateView(LoginRequiredMixin, CreateView):
+    form_class = RodadoForm
+    model = Rodado
+    template_name = 'subastas/rodados/form.html'
+    success_url = reverse_lazy('subastas:rodados')
+
+    def form_valid(self, form):
+
+        return super(RodadoCreateView, self).form_valid(form)
+
+
+def upload_xlsx(request):
+    if request.method == "POST":
+        rodados_cargados = Rodado.objects \
+            .load_bienes(request.FILES['bienes_file'])
+        messages.add_message(request,
+                             messages.INFO,
+                             'Bienes cargados: %s' % (rodados_cargados))
+    return render(request, 'subastas/rodados/cargar_xlsx.html')

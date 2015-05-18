@@ -5,7 +5,7 @@ from django.db.models import Q
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Reset, Layout, Div
 
-from .models import Acta, Subasta
+from .models import Acta, Rodado, Subasta
 from personas.models import Persona
 
 
@@ -84,3 +84,17 @@ class InscriptionForm(forms.ModelForm):
                                        Q(apellidos__icontains=query) |
                                        Q(dni__icontains=query))
         self.fields['personas'].queryset = personas.order_by('apellidos')
+
+
+class RodadoForm(forms.ModelForm):
+    class Meta:
+        fields = ['descripcion',
+                   'modelo',
+                   'chasis',
+                   'motor',
+                   'dominio',
+                   'precio_base',
+                   'precio_venta',
+                   'lote',
+                   'chatarra']
+        model = Rodado

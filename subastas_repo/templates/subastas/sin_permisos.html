@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Sin permisos{% endblock %}
+
+{% block content %}
+    <h1>Sin permisos</h1>
+    <p>
+        <h2>
+            <a class="btn btn-default" href="{% url 'account_logout' %}">Cerrar sesion e ingresar con otro usuario</a>
+        </h2>
+
+    </p>
+{% endblock content %}

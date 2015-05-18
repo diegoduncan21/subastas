@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.conf.urls import patterns, include, url
+from django.views.generic import TemplateView
 
 from . import views
 
@@ -40,5 +41,28 @@ urlpatterns = patterns('subastas.views',
         regex=r'^acreditadores$',
         view=views.AcreditadorHomeView.as_view(),
         name='acreditadores'
+    ),
+    url(
+        regex=r'^bienes$',
+        view=views.RodadoListView.as_view(),
+        name='rodados'
+    ),
+    url(
+        regex=r'^bienes/nuevo/$',
+        view=views.RodadoCreateView.as_view(),
+        name='rodados_create'
+    ),
+    url(
+        regex=r'^bienes/nuevo/xlsx$',
+        view=views.upload_xlsx,
+        name='rodados_nuevo_xlsx'
+    ),
+
+    # Sin permisos
+    url(
+        regex=r'^sin_permisos$',
+        view=TemplateView.as_view(
+            template_name='subastas/sin_permisos.html'),
+        name='sin_permisos'
     ),
 )

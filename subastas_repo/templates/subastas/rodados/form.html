@@ -1,0 +1,40 @@
+{% extends "subastas/bases/admin_base.html" %}
+
+
+{% load crispy_forms_tags %}
+
+{% block content_administrador %}
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h1>
+                    {% block header %}
+                        {% if instance %}
+                            Modificar Bien: {{ instance }}
+                        {% else %}
+                            Agregar Bien
+                        {% endif %}
+                    {% endblock %}
+                </h1>
+              </div>
+              <div class="panel-body">
+                <form method="POST"
+                      class="form-horizontal"
+                      action=".">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="control-group">
+                      <div class="controls">
+                        <button type="submit" class="btn btn-success">Aplicar</button>
+                      </div>
+                    </div>
+                </form>
+              </div>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock content_administrador %}

@@ -1,0 +1,21 @@
+{% extends "subastas/bases/admin_base.html" %}
+
+{% block content_administrador %}
+
+    <h2>
+        Bienes
+        <a class="btn btn-primary pull-right" href="{% url 'subastas:rodados_create' %}">Agregar Bien</a>
+        <a class="btn btn-info pull-right" href="{% url 'subastas:rodados_nuevo_xlsx' %}">Agregar bienes desde xlsx</a>
+    </h2>
+    <div class="list-group">
+        {% for acta in object_list %}
+          <a href="#" class="list-group-item">
+            <h5 class="list-group-item-heading">
+              {{ acta }}
+            </h5>
+          </a>
+        {% empty %}
+            No hay bienes.
+        {% endfor %}
+    </div>
+{% endblock content_administrador %}

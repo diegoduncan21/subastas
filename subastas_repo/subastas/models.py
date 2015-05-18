@@ -1,4 +1,6 @@
+from django.db import IntegrityError
 from django.db import models
+from django.db import transaction
 from django.utils import timezone
 
 from openpyxl import load_workbook
@@ -10,27 +12,44 @@ class RodadoManager(models.Manager):
         ws = wb.active
         instances = []
         for row in ws.iter_rows(range_string="A2:K3"):
-            subasta = Subasta.objects.create(numero_inventario=row[0],
-                                             descripcion=row[4],
-                                             modelo=row[8],
-                                             chasis=row[9],
-                                             motor=row[10],
-                                             dominio=row[6])
-            instances.append(subasta)
+            try:
+                with transaction.atomic():
+                    rodado = Rodado.objects.create(numero_inventario=row[0].value,
+                                                   descripcion=row[4].value,
+                                                   modelo=row[8].value,
+                                                   chasis=row[9].value,
+                                                   motor=row[10].value,
+                                                   dominio=row[6].value)
+            except IntegrityError:
+                continue
+            else:
+                instances.append(rodado)
         return len(instances)
+
+    def no_subastados(self):
+        return super(RodadoManager, self).get_queryset() \
+            .filter(subastado=False)
+
+    def subastados(self):
+        return super(RodadoManager, self).get_queryset() \
+            .filter(subastado=True)
 
 
 class Rodado(models.Model):
-    numero_inventario = models.IntegerField()
+    numero_inventario = models.IntegerField(unique=True)
     descripcion = models.TextField(blank=True, null=True)
-    modelo = models.IntegerField()
-    chasis = models.CharField(max_length=15)
-    motor = models.CharField(max_length=10)
-    dominio = models.CharField(max_length=12)
+    modelo = models.CharField(max_length=50)
+    chasis = models.CharField(max_length=50)
+    motor = models.CharField(max_length=50)
+    dominio = models.CharField(max_length=50)
     precio_base = models.FloatField(default=0)
     precio_venta = models.FloatField(default=0)
     lote = models.IntegerField(default=0)
     chatarra = models.BooleanField(default=False)
+
+    subastado = models.BooleanField(default=False)
+
+    objects = RodadoManager()
 
     def __unicode__(self):
         return "%s %s %s" % (self.chasis, self.motor, self.dominio)
