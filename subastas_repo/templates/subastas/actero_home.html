@@ -1,6 +1,7 @@
 {% extends "subastas/bases/acreditador_actero_base.html" %}
 
 {% block content_acreditador_actero %}
+  {% if current_subasta %}
     <h2>actas pasadas</h2>
     <div class="list-group">
         {% for acta in object_list %}
@@ -13,4 +14,7 @@
             No hay actas pasadas.
         {% endfor %}
     </div>
+  {% else %}
+    <h2>No hay una subasta en curso.</h2>
+  {% endif %}
 {% endblock content_acreditador_actero%}
