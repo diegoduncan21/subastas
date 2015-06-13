@@ -65,7 +65,9 @@ class UserListView(LoginRequiredMixin, ListView):
     slug_url_kwarg = "username"
 
     def get_queryset(self):
-        return User.objects.exclude(id=self.request.user.id)
+        return User.objects \
+            .exclude(id=self.request.user.id) \
+            .exclude(is_superuser=True)
 
 
 @login_required
@@ -74,7 +76,7 @@ def create_user(request):
         form = CreateUserForm(request.POST)
         if form.is_valid():
             user = form.save()
-            user.user_permissions.add(form.cleaned_data.get('perfil'))
+            user.groups.add(form.cleaned_data.get('perfil'))
             user.set_password(form.cleaned_data.get('password'))
             EmailAddress.objects.create(user=user,
                                         email=user.username,
@@ -92,8 +94,8 @@ def update_user(request, user_id):
         form = CreateUserForm(request.POST, instance=instance)
         if form.is_valid():
             user = form.save()
-            user.user_permissions.clear()
-            user.user_permissions.add(form.cleaned_data.get('perfil'))
+            user.groups.clear()
+            user.groups.add(form.cleaned_data.get('perfil'))
             user.set_password(form.cleaned_data.get('password'))
             user.save()
             EmailAddress.objects.get_or_create(user=user,
@@ -102,7 +104,7 @@ def update_user(request, user_id):
             return redirect(reverse("users:list"))
     else:
         form = CreateUserForm(instance=instance,
-                              initial={'perfil': instance.user_permissions.last()})
+                              initial={'perfil': instance.groups.last()})
     return render(request, 'users/user_form.html',
                   {'form': form,
                    'instance': instance})

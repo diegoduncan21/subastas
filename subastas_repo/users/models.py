@@ -13,10 +13,3 @@ class User(AbstractUser):
 
     def __unicode__(self):
         return self.username
-
-    class Meta:
-        permissions = (
-            ("administrador", u"Administrador"),
-            ("acreditador", u"Acreditador"),
-            ("actero", u"Actero"),
-        )

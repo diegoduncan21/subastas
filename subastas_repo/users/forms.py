@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django import forms
-from django.contrib.auth.models import Permission
+from django.contrib.auth.models import Group
 from django.core.urlresolvers import reverse
 
 from crispy_forms.helper import FormHelper
@@ -20,10 +20,7 @@ class UserForm(forms.ModelForm):
 
 
 class CreateUserForm(forms.ModelForm):
-    perfil = forms.ModelChoiceField(
-        queryset=Permission.objects.filter(codename__in=['acreditador',
-                                                         'actero',
-                                                         'administrador']))
+    perfil = forms.ModelChoiceField(queryset=Group.objects.all())
     password = forms.CharField(widget=forms.PasswordInput())
     password2 = forms.CharField(label='Repetir password',
                                 widget=forms.PasswordInput())
