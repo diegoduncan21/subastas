@@ -3,15 +3,15 @@
 {% block content_administrador %}
 
     <h2>
-        Bienes
+        Bienes <small>({{ object_list.count }})</small>
         <a class="btn btn-primary pull-right" href="{% url 'subastas:rodados_create' %}">Agregar Bien</a>
         <a class="btn btn-info pull-right" href="{% url 'subastas:rodados_nuevo_xlsx' %}">Agregar bienes desde xlsx</a>
     </h2>
     <div class="list-group">
-        {% for acta in object_list %}
-          <a href="#" class="list-group-item">
+        {% for bien in object_list %}
+          <a href="{% url 'subastas:rodados_update' bien.id %}" class="list-group-item">
             <h5 class="list-group-item-heading">
-              {{ acta }}
+              {{ bien }}
             </h5>
           </a>
         {% empty %}

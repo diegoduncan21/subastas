@@ -5,7 +5,7 @@
     {% if current %}
         <h2>Subasta vigente</h2>
         <div class="list-group">
-            <a href="{% url 'subastas:edit' current.id %}" class="list-group-item list-group-item-success">
+            <a href="{% url 'subastas:update' current.id %}" class="list-group-item list-group-item-success">
                 {{ current.fecha_hora | date:'d/m/Y' }}
                 <span class="badge pull-right">
                     Actas: {{ current.actas.count }}

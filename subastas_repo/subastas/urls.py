@@ -19,8 +19,8 @@ urlpatterns = patterns('subastas.views',
     ),
     url(
         regex=r'^editar/(?P<pk>\d+)$',
-        view=views.SubastaEditView.as_view(),
-        name='edit'
+        view=views.SubastaUpdateView.as_view(),
+        name='update'
     ),
     url(
         regex=r'^cerrar/(?P<subasta_id>\d+)$',
@@ -51,6 +51,11 @@ urlpatterns = patterns('subastas.views',
         regex=r'^bienes/nuevo/$',
         view=views.RodadoCreateView.as_view(),
         name='rodados_create'
+    ),
+    url(
+        regex=r'^bienes/editar/(?P<pk>\d+)$',
+        view=views.RodadoUpdateView.as_view(),
+        name='rodados_update'
     ),
     url(
         regex=r'^bienes/nuevo/xlsx$',

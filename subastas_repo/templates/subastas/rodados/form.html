@@ -22,7 +22,11 @@
               <div class="panel-body">
                 <form method="POST"
                       class="form-horizontal"
-                      action=".">
+                      action="{% if instance %}
+                                {% url 'subastas:rodados_update' instance.id %}
+                              {% else %}
+                                {% url 'subastas:rodados_create' %}
+                              {% endif %}">
                     {% csrf_token %}
                     {{ form|crispy }}
                     <div class="control-group">

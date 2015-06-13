@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.db import IntegrityError
 from django.db import models
 from django.db import transaction
@@ -42,7 +44,7 @@ class Rodado(models.Model):
     chasis = models.CharField(max_length=50)
     motor = models.CharField(max_length=50)
     dominio = models.CharField(max_length=50)
-    anio = models.IntegerField(blank=True, null=True)
+    anio = models.IntegerField("Año", blank=True, null=True)
     precio_base = models.FloatField(default=0)
     precio_venta = models.FloatField(default=0)
     lote = models.IntegerField(default=0)

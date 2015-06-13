@@ -63,7 +63,7 @@ class SubastaCreateView(LoginRequiredMixin, CreateView):
         return super(SubastaCreateView, self).form_valid(form)
 
 
-class SubastaEditView(LoginRequiredMixin, UpdateView):
+class SubastaUpdateView(LoginRequiredMixin, UpdateView):
     context_object_name = 'instance'
     form_class = SubastaForm
     model = Subasta
@@ -172,8 +172,24 @@ class RodadoCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('subastas:rodados')
 
     def form_valid(self, form):
-
+        messages.add_message(self.request,
+                             messages.INFO,
+                             'Biene cargado exitosamente.')
         return super(RodadoCreateView, self).form_valid(form)
+
+
+class RodadoUpdateView(LoginRequiredMixin, UpdateView):
+    context_object_name = 'instance'
+    form_class = RodadoForm
+    model = Rodado
+    success_url = reverse_lazy('subastas:rodados')
+    template_name = 'subastas/rodados/form.html'
+
+    def form_valid(self, form):
+        messages.add_message(self.request,
+                             messages.INFO,
+                             'Bien modificado exitosamente.')
+        return super(RodadoUpdateView, self).form_valid(form)
 
 
 def upload_xlsx(request):

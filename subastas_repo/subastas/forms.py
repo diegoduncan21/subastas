@@ -93,6 +93,7 @@ class RodadoForm(forms.ModelForm):
                    'chasis',
                    'motor',
                    'dominio',
+                   'anio',
                    'precio_base',
                    'precio_venta',
                    'lote',
