@@ -19,12 +19,10 @@
         <div class="list-group">
             {% for profesional in profesional_list %}
               <a href="{% url 'personas:profesionales_update' profesional.id %}" class="list-group-item">
-                <h5 class="list-group-item-heading">
-                  {{ profesional }}
-                  <span class="label label-default pull-right">
-                    {{ profesional.titulo }}
-                  </span>
-                </h5>
+                {{ profesional }}
+                <span class="label label-default pull-right">
+                  {{ profesional.titulo }}
+                </span>
               </a>
             {% endfor %}
         </div>

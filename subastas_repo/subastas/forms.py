@@ -12,6 +12,13 @@ from personas.models import Persona
 class ActaForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ActaForm, self).__init__(*args, **kwargs)
+        # Mostrar solo los bienes no subastados
+        self.fields['bien_rodado'].queryset = Rodado.objects.no_subastados()
+
+        # Mostrar solo las personas inscriptas
+        current_subasta = Subasta.objects.get_current()
+        self.fields['persona'].queryset = current_subasta.personas.all()
+
         self.helper = FormHelper()
         self.helper.form_method = "POST"
         self.helper.form_action = reverse("subastas:actas_create")
@@ -37,6 +44,9 @@ class SubastaForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(SubastaForm, self).__init__(*args, **kwargs)
+        # Mostrar solo los bienes no subastados
+        self.fields['bienes'].queryset = Rodado.objects.no_subastados()
+
         self.helper = FormHelper()
         self.helper.form_method = "post"
         self.helper.form_action = reverse("subastas:create")

@@ -1,0 +1,13 @@
+<ul>
+    <li>id: {{ object.id }}</li>
+    <li>bien rodado: {{ object.bien_rodado }}</li>
+    <li>quien lo compro?: {{ object.persona }}</li>
+    <li>profesionales:
+        <ul>
+            {% for profesional in object.profesionales.all %}
+                <li>{{ profesional }}</li>
+            {% endfor %}
+        </ul>
+    </li>
+    <li>descripcion: {{ object.descripcion }}</li>
+</ul>

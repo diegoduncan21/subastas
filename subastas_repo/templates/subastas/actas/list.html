@@ -3,22 +3,38 @@
 {% block content_acreditador_actero %}
 
     {% if current_subasta %}
-        <h2>
-            Actas
-                <a class="btn btn-primary pull-right" href="{% url 'subastas:actas_create' %}">Agregar Acta</a>
-        </h2>
-        <div class="list-group">
-            {% for acta in object_list %}
-              <a href="#" class="list-group-item">
-                <h5 class="list-group-item-heading">
-                  {{ acta }}
-                </h5>
-              </a>
-            {% empty %}
-                No hay actas.
-            {% endfor %}
+      <div class="panel panel-default text-center">
+
+        <div class="panel-heading">
+          <h3>
+              Subasta N° {{ current_subasta.numero }}
+              <span class="small">
+                  {{ current_subasta.fecha_hora | date:'d/m/Y' }}
+              </span>
+          </h3>
+          <h4>Actas</h4>
         </div>
+
+        <div class="panel-body">
+          <div class="col-md-12">
+            <h2>
+              &nbsp;
+              <a class="btn btn-primary pull-right" href="{% url 'subastas:actas_create' %}">Agregar Acta</a>
+            </h2>
+
+            <div class="list-group">
+              {% for acta in object_list %}
+                <a href="{% url 'subastas:print' acta.id %}" class="list-group-item">
+                  {{ acta }}
+                </a>
+              {% empty %}
+                  No hay actas.
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
     {% else %}
-        <h2>No hay una subasta en curso.</h2>
+      <h2>No hay una subasta en curso.</h2>
     {% endif %}
 {% endblock content_acreditador_actero%}

@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.views.generic import CreateView
+from django.views.generic import DetailView
 from django.views.generic import ListView
 from django.views.generic import UpdateView
 from django.views.generic import FormView
@@ -114,6 +115,11 @@ class ActaCreateView(LoginRequiredMixin, CreateView):
                              messages.INFO,
                              'Acta agregada exitosamente.')
         return super(ActaCreateView, self).form_valid(form)
+
+
+class ActaPrintView(LoginRequiredMixin, DetailView):
+    model = Acta
+    template_name = 'subastas/actas/print.html'
 
 
 class AcreditadorHomeView(LoginRequiredMixin, FormView):

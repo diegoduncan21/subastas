@@ -2,8 +2,11 @@
 
 {% block content_administrador %}
 
+    <h2>
+        Subasta vigente
+        <a class="btn btn-primary pull-right" href="{% url 'subastas:create' %}">Agregar Subasta</a>
+    </h2>
     {% if current %}
-        <h2>Subasta vigente</h2>
         <div class="list-group">
             <a href="{% url 'subastas:update' current.id %}" class="list-group-item list-group-item-success">
                 {{ current.fecha_hora | date:'d/m/Y' }}
@@ -19,10 +22,7 @@
             </a>
         </div>
     {% else %}
-        <h2>
-            Ninguna subasta en curso
-            <a class="btn btn-primary pull-right" href="{% url 'subastas:create' %}">Agregar Subasta</a>
-        </h2>
+        Ninguna subasta en curso
     {% endif %}
 
     <h2>Próximas Subastas</h2>

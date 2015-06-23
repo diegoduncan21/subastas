@@ -3,17 +3,18 @@
 from django.db import IntegrityError
 from django.db import models
 from django.db import transaction
+from django.db.models.query import QuerySet
 from django.utils import timezone
 
 from openpyxl import load_workbook
 
 
-class RodadoManager(models.Manager):
+class RodadoQuerySet(QuerySet):
     def load_bienes(self, path_xlsx):
         wb = load_workbook(path_xlsx)
         ws = wb.active
         instances = []
-        for row in ws.iter_rows(range_string="A2:K3"):
+        for row in ws.iter_rows(range_string="A2:K4"):
             try:
                 with transaction.atomic():
                     rodado = Rodado.objects.create(numero_inventario=row[0].value,
@@ -29,12 +30,10 @@ class RodadoManager(models.Manager):
         return len(instances)
 
     def no_subastados(self):
-        return super(RodadoManager, self).get_queryset() \
-            .filter(subastado=False)
+        return self.filter(subastado=False)
 
     def subastados(self):
-        return super(RodadoManager, self).get_queryset() \
-            .filter(subastado=True)
+        return self.filter(subastado=True)
 
 
 class Rodado(models.Model):
@@ -52,7 +51,7 @@ class Rodado(models.Model):
 
     subastado = models.BooleanField(default=False)
 
-    objects = RodadoManager()
+    objects = RodadoQuerySet.as_manager()
 
     def __unicode__(self):
         return "%s %s %s" % (self.chasis, self.motor, self.dominio)
@@ -60,8 +59,11 @@ class Rodado(models.Model):
 
 class SubastaManager(models.Manager):
     def get_current(self):
+        now = timezone.now()
         return super(SubastaManager, self).get_queryset() \
-            .filter(fecha_hora__day=timezone.now().day,
+            .filter(fecha_hora__day=now.day,
+                    fecha_hora__month=now.month,
+                    fecha_hora__year=now.year,
                     cerrado_el=None).last()
 
 
@@ -95,4 +97,9 @@ class Acta(models.Model):
     descripcion = models.TextField(blank=True, null=True)
 
     def __unicode__(self):
-        return "%s %s" % (self.bien_rodado, self.persona)
+        return "%s ==> %s" % (self.bien_rodado, self.persona)
+
+    def save(self, *args, **kwargs):
+        self.bien_rodado.subastado = True
+        self.bien_rodado.save()
+        super(Acta, self).save(*args, **kwargs)

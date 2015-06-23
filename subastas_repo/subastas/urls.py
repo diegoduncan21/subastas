@@ -38,6 +38,11 @@ urlpatterns = patterns('subastas.views',
         name='actas_create'
     ),
     url(
+        regex=r'^imprimir/(?P<pk>\d+)$',
+        view=views.ActaPrintView.as_view(),
+        name='print'
+    ),
+    url(
         regex=r'^acreditadores$',
         view=views.AcreditadorHomeView.as_view(),
         name='acreditadores'
