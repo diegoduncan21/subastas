@@ -1,6 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Acta</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="text-center">ACTA DE SUBASTA</h1>
+                <h2 class="text-center">
+                    LOTE N° {{ object.bien_rodado.lote }}
+                </h2>
+                <p>
+                    ----En la ciudad de RESISTENCIA - CHACO, a los {{ object.subasta.fecha_hora|fecha_literal }} (object.subasta.fecha_hora) dias del mes de {{ object.subasta.fecha_hora|mes_literal }} de {{ object.subasta.fecha_hora|date: '%Y' }}, en {{ object.subasta.domicilio.descripcion }} sito en {{ object.subasta.domicilio.direccion }}, siendo las {{ object.subasta.fecha_hora|hora_literal }} horas se da comienzo el acto de la subasta, por Cuenta y Orden del GOBIERNO DE LA PROVINCIA DEL CHACO, por Decreto N° {{ object.subasta.decreto }}, del Poder Ejecutivo, a través de la Subsecretaria de Coordinación y Gestión Pública, a cargo de la Cra. Maris Telma Gamón, y cuyo edicto fuera publicado por cinco (5) días en Boletin Oficial, diario local, diarios provinciales y nacionales. Tomando participación para este acto el Martillero Publico {{ object.lote.grupo.martillero }} (Matricula N° {{ object.lote.grupo.martillero.matricula }}), con el Grupo N° {{ object.lote.grupo.numero }}, da comienzo con los automotores: LOTE N° {% if object.lote.chatarra %} de chatarra {% endif %} {% if bienes.count > 1 %} compuesto por {% for bien in bienes %}
+                        un (1) {{ bien.descripcion }} {{ bien.marca }}
+                    {% endfor %}
+                    {% else %} {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
 <ul>
     <li>id: {{ object.id }}</li>
-    <li>bien rodado: {{ object.bien_rodado }}</li>
+    <li>bien rodado: {{ bienes }}</li>
     <li>quien lo compro?: {{ object.persona }}</li>
     <li>profesionales:
         <ul>

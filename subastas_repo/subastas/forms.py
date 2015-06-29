@@ -5,15 +5,13 @@ from django.db.models import Q
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Reset, Layout, Div
 
-from .models import Acta, Rodado, Subasta
+from .models import Acta, Grupo, Rodado, Subasta
 from personas.models import Persona
 
 
 class ActaForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ActaForm, self).__init__(*args, **kwargs)
-        # Mostrar solo los bienes no subastados
-        self.fields['bien_rodado'].queryset = Rodado.objects.no_subastados()
 
         # Mostrar solo las personas inscriptas
         current_subasta = Subasta.objects.get_current()
@@ -26,14 +24,14 @@ class ActaForm(forms.ModelForm):
         self.helper.add_input(Reset('job_reset', 'Limpiar',
                               css_class='btn-default'))
         self.helper.layout = Layout(
-            Div('bien_rodado',
+            Div('lote',
                 'persona',
                 'profesionales',
                 'descripcion')
         )
 
     class Meta:
-        fields = ['bien_rodado',
+        fields = ['lote',
                   'persona',
                   'profesionales',
                   'descripcion']
@@ -47,9 +45,16 @@ class SubastaForm(forms.ModelForm):
         # Mostrar solo los bienes no subastados
         self.fields['bienes'].queryset = Rodado.objects.no_subastados()
 
+        instance = kwargs.get('instance', None)
+        if instance:
+            form_action = reverse("subastas:update",
+                                       args=(self.instance.id, ))
+        else:
+            form_action = reverse("subastas:create")
+
         self.helper = FormHelper()
         self.helper.form_method = "post"
-        self.helper.form_action = reverse("subastas:create")
+        self.helper.form_action = form_action
         self.helper.add_input(Submit('job_submit', 'Guardar'))
         self.helper.add_input(Reset('job_reset', 'Limpiar',
                               css_class='btn-default'))
@@ -63,12 +68,6 @@ class SubastaForm(forms.ModelForm):
         )
 
     class Meta:
-        fields = ['numero',
-                  'fecha_hora',
-                  'decreto',
-                  'domicilio',
-                  'profesionales',
-                  'bienes']
         model = Subasta
 
 
@@ -98,14 +97,34 @@ class InscriptionForm(forms.ModelForm):
 
 class RodadoForm(forms.ModelForm):
     class Meta:
-        fields = ['descripcion',
-                   'modelo',
-                   'chasis',
-                   'motor',
-                   'dominio',
-                   'anio',
-                   'precio_base',
-                   'precio_venta',
-                   'lote',
-                   'chatarra']
+        fields = ['tipo',
+                  'numero_inventario',
+                  'descripcion',
+                  'marca',
+                  'modelo',
+                  'chasis',
+                  'motor',
+                  'dominio',
+                  'anio',
+                  'precio_base',
+                  'precio_venta']
         model = Rodado
+
+
+class GrupoForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(GrupoForm, self).__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.form_method = "post"
+        self.helper.form_action = reverse("subastas:grupos_create")
+        self.helper.add_input(Submit('grupo_submit', 'Guardar'))
+        self.helper.add_input(Reset('grupo_reset', 'Limpiar',
+                              css_class='btn-default'))
+        self.helper.layout = Layout(
+            Div('numero',
+                'martillero')
+        )
+
+    class Meta:
+        model = Grupo

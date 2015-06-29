@@ -7,7 +7,7 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('personas', '0001_initial'),
+        ('personas', '__first__'),
     ]
 
     operations = [
@@ -22,12 +22,24 @@ class Migration(migrations.Migration):
             bases=(models.Model,),
         ),
         migrations.CreateModel(
-            name='Caracteristica',
+            name='Grupo',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('marca', models.CharField(max_length=50)),
-                ('modelo', models.CharField(max_length=50)),
-                ('descripcion', models.TextField(null=True, blank=True)),
+                ('numero', models.IntegerField()),
+                ('subastado', models.BooleanField(default=False)),
+                ('martillero', models.ForeignKey(to='personas.Profesional')),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Lote',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('numero', models.IntegerField()),
+                ('subastado', models.BooleanField(default=False)),
+                ('chatarra', models.BooleanField(default=False)),
             ],
             options={
             },
@@ -37,16 +49,18 @@ class Migration(migrations.Migration):
             name='Rodado',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('numero_inventario', models.IntegerField()),
-                ('modelo', models.IntegerField()),
-                ('chasis', models.CharField(max_length=15)),
-                ('motor', models.CharField(max_length=10)),
-                ('dominio', models.CharField(max_length=12)),
+                ('numero_inventario', models.IntegerField(unique=True)),
+                ('descripcion', models.TextField(null=True, blank=True)),
+                ('modelo', models.CharField(max_length=50)),
+                ('chasis', models.CharField(max_length=50)),
+                ('motor', models.CharField(max_length=50)),
+                ('dominio', models.CharField(max_length=50)),
+                ('marca', models.CharField(max_length=100)),
+                ('anio', models.IntegerField(null=True, verbose_name=b'A\xc3\xb1o', blank=True)),
                 ('precio_base', models.FloatField(default=0)),
                 ('precio_venta', models.FloatField(default=0)),
-                ('lote', models.IntegerField()),
-                ('chatarra', models.BooleanField(default=False)),
-                ('caracteristicas', models.ForeignKey(to='subastas.Caracteristica')),
+                ('subastado', models.BooleanField(default=False)),
+                ('lote', models.ForeignKey(to='subastas.Lote')),
             ],
             options={
             },
@@ -60,7 +74,6 @@ class Migration(migrations.Migration):
                 ('fecha_hora', models.DateTimeField()),
                 ('cerrado_el', models.DateTimeField(null=True, blank=True)),
                 ('decreto', models.CharField(max_length=10)),
-                ('actas', models.ManyToManyField(to='subastas.Acta', null=True, blank=True)),
                 ('bienes', models.ManyToManyField(to='subastas.Rodado')),
                 ('domicilio', models.ForeignKey(to='personas.Domicilio')),
                 ('personas', models.ManyToManyField(to='personas.Persona', null=True, blank=True)),
@@ -70,10 +83,32 @@ class Migration(migrations.Migration):
             },
             bases=(models.Model,),
         ),
+        migrations.CreateModel(
+            name='Tipo',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('nombre', models.CharField(max_length=100)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.AddField(
+            model_name='rodado',
+            name='tipo',
+            field=models.ForeignKey(to='subastas.Tipo'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='grupo',
+            name='subasta',
+            field=models.ForeignKey(to='subastas.Subasta'),
+            preserve_default=True,
+        ),
         migrations.AddField(
             model_name='acta',
-            name='bien_rodado',
-            field=models.ForeignKey(to='subastas.Rodado'),
+            name='lote',
+            field=models.OneToOneField(to='subastas.Lote'),
             preserve_default=True,
         ),
         migrations.AddField(
@@ -86,6 +121,12 @@ class Migration(migrations.Migration):
             model_name='acta',
             name='profesionales',
             field=models.ManyToManyField(to='personas.Profesional'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='acta',
+            name='subasta',
+            field=models.ForeignKey(related_name='actas', to='subastas.Subasta'),
             preserve_default=True,
         ),
     ]

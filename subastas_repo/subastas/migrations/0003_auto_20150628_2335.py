@@ -7,14 +7,14 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('subastas', '0007_rodado_anio'),
+        ('subastas', '0002_auto_20150628_2111'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='rodado',
-            name='anio',
-            field=models.IntegerField(null=True, verbose_name=b'A\xc3\xb1o', blank=True),
+            model_name='grupo',
+            name='subasta',
+            field=models.ForeignKey(related_name='grupos', blank=True, to='subastas.Subasta', null=True),
             preserve_default=True,
         ),
     ]

@@ -1,0 +1,9 @@
+{% extends 'subastas/bases/admin_base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content_administrador %}
+    <h2>Agregar grupos</h2>
+
+    {% crispy form form.helper %}
+{% endblock %}

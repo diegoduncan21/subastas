@@ -14,8 +14,12 @@ from braces.views import LoginRequiredMixin
 
 from personas.forms import PersonaForm
 from personas.models import Persona
-from .forms import ActaForm, InscriptionForm, RodadoForm, SubastaForm
-from .models import Acta, Rodado, Subasta
+from .forms import (ActaForm,
+                    GrupoForm,
+                    InscriptionForm,
+                    RodadoForm,
+                    SubastaForm)
+from .models import Acta, Grupo, Rodado, Subasta
 
 
 @login_required
@@ -58,6 +62,7 @@ class SubastaCreateView(LoginRequiredMixin, CreateView):
     template_name = 'subastas/form.html'
 
     def form_valid(self, form):
+        form.save()
         messages.add_message(self.request,
                              messages.INFO,
                              'Subasta creada exitosamente.')
@@ -70,6 +75,12 @@ class SubastaUpdateView(LoginRequiredMixin, UpdateView):
     model = Subasta
     success_url = reverse_lazy('subastas:list')
     template_name = 'subastas/form.html'
+
+    def form_valid(self, form):
+        messages.add_message(self.request,
+                             messages.INFO,
+                             'Subasta modificada exitosamente.')
+        return super(SubastaUpdateView, self).form_valid(form)
 
 
 def cerrar_subasta(request, subasta_id):
@@ -108,9 +119,9 @@ class ActaCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('subastas:actas')
 
     def form_valid(self, form):
-        self.current_subasta = Subasta.objects.get_current()
-        acta_nueva = form.save()
-        self.current_subasta.actas.add(acta_nueva)
+        acta_nueva = form.save(commit=False)
+        acta_nueva.subasta = Subasta.objects.get_current()
+        acta_nueva.save()
         messages.add_message(self.request,
                              messages.INFO,
                              'Acta agregada exitosamente.')
@@ -120,6 +131,12 @@ class ActaCreateView(LoginRequiredMixin, CreateView):
 class ActaPrintView(LoginRequiredMixin, DetailView):
     model = Acta
     template_name = 'subastas/actas/print.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ActaPrintView, self).get_context_data(**kwargs)
+        acta = kwargs.get('object')
+        context['bienes'] = Rodado.objects.filter(lote=acta.lote)
+        return context
 
 
 class AcreditadorHomeView(LoginRequiredMixin, FormView):
@@ -180,7 +197,7 @@ class RodadoCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         messages.add_message(self.request,
                              messages.INFO,
-                             'Biene cargado exitosamente.')
+                             'Bien cargado exitosamente.')
         return super(RodadoCreateView, self).form_valid(form)
 
 
@@ -206,3 +223,33 @@ def upload_xlsx(request):
                              messages.INFO,
                              'Bienes cargados: %s' % (rodados_cargados))
     return render(request, 'subastas/rodados/cargar_xlsx.html')
+
+
+class GrupoListView(LoginRequiredMixin, ListView):
+    model = Grupo
+    template_name = 'subastas/grupos/list.html'
+
+    def get_queryset(self):
+        """Grupos de la subasta vigente"""
+        subasta = Subasta.objects.get_current()
+        return subasta.grupos.all()
+
+
+class GrupoCreateView(LoginRequiredMixin, CreateView):
+    form_class = GrupoForm
+    model = Grupo
+    template_name = 'subastas/grupos/form.html'
+    success_url = reverse_lazy('subastas:grupos')
+
+    def form_valid(self, form):
+        grupo = form.save(commit=False)
+        grupo.subasta = Subasta.objects.get_current()
+        grupo.save()
+        messages.add_message(self.request,
+                             messages.INFO,
+                             'Grupo cargado exitosamente.')
+        return super(GrupoCreateView, self).form_valid(form)
+
+    def form_invalid(self, form):
+        print form.errors
+        return super(GrupoCreateView, self).form_invalid(form)

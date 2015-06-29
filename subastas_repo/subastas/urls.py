@@ -67,7 +67,16 @@ urlpatterns = patterns('subastas.views',
         view=views.upload_xlsx,
         name='rodados_nuevo_xlsx'
     ),
-
+    url(
+        regex=r'^grupos$',
+        view=views.GrupoListView.as_view(),
+        name='grupos'
+    ),
+    url(
+        regex=r'^grupos/nuevo/$',
+        view=views.GrupoCreateView.as_view(),
+        name='grupos_create'
+    ),
     # Sin permisos
     url(
         regex=r'^sin_permisos$',

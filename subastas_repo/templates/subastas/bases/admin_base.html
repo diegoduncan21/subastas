@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="col-md-4">
+    <div class="col-md-2">
       </ul>
         <li class="list-group-item"><a href="{% url 'subastas:list' %}">Subastas</a></li>
         <li class="list-group-item"><a href="{% url 'users:list' %}">Usuarios</a></li>
@@ -18,7 +18,7 @@
       </ul>
     </div>
 
-     <div class="col-md-8">
+     <div class="col-md-10">
         {% block content_administrador %}{% endblock content_administrador %}
     </div>
 {% endblock content %}

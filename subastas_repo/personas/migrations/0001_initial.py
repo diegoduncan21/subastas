@@ -40,7 +40,7 @@ class Migration(migrations.Migration):
                 ('nombres', models.CharField(max_length=100, null=True, blank=True)),
                 ('apellidos', models.CharField(max_length=100, null=True, blank=True)),
                 ('razon_social', models.CharField(max_length=100, null=True, blank=True)),
-                ('dni', models.CharField(max_length=10, null=True, blank=True)),
+                ('dni', models.CharField(max_length=10, unique=True, null=True, blank=True)),
                 ('cuit', models.CharField(max_length=15, null=True, blank=True)),
                 ('telefono', models.CharField(max_length=20)),
                 ('domicilio', models.ForeignKey(to='personas.Domicilio')),

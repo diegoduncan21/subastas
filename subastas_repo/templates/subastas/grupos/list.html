@@ -1,0 +1,20 @@
+{% extends 'subastas/bases/admin_base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content_administrador %}
+    <h2>
+        Grupos
+        <a class="btn btn-primary pull-right" href="{% url 'subastas:grupos_create' %}">Agregar Grupo</a>
+    </h2>
+
+    <div class="list-group">
+        {% for grupo in object_list %}
+          <a href="#" class="list-group-item">
+            {{ grupo }}
+          </a>
+        {% empty %}
+            No existen grupos.
+        {% endfor %}
+    </div>
+{% endblock %}

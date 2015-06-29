@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.db import models
 
 from model_utils import Choices
@@ -25,16 +27,26 @@ class Profesional(models.Model):
 
     nombres = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)
-    dni = models.CharField(max_length=10, blank=True, null=True)
-    titulo = models.CharField(choices=TITULOS,
+    dni = models.CharField('DNI',
+                           max_length=10,
+                           blank=True,
+                           null=True)
+    titulo = models.CharField('Titulo',
+                              choices=TITULOS,
                               max_length=100,
                               blank=True,
                               null=True)
-    matricula = models.CharField(max_length=50, blank=True, null=True)
-    telefono = models.CharField(max_length=20, blank=True, null=True)
+    matricula = models.CharField('Número Matrícula',
+                                 max_length=50,
+                                 blank=True,
+                                 null=True)
+    telefono = models.CharField('Teléfono',
+                                max_length=20,
+                                blank=True,
+                                null=True)
 
     def __unicode__(self):
-        return "%s, %s" % (self.nombres, self.apellidos)
+        return "%s, %s" % (self.apellidos, self.nombres)
 
     class Meta:
         verbose_name_plural = 'Profesionales'

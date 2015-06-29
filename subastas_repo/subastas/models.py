@@ -9,6 +9,22 @@ from django.utils import timezone
 from openpyxl import load_workbook
 
 
+class Lote(models.Model):
+    numero = models.IntegerField()
+    subastado = models.BooleanField(default=False)
+    chatarra = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return self.numero
+
+
+class Tipo(models.Model):
+    nombre = models.CharField(max_length=100)
+
+    def __unicode__(self):
+        return self.nombre
+
+
 class RodadoQuerySet(QuerySet):
     def load_bienes(self, path_xlsx):
         wb = load_workbook(path_xlsx)
@@ -17,13 +33,15 @@ class RodadoQuerySet(QuerySet):
         for row in ws.iter_rows(range_string="A2:K4"):
             try:
                 with transaction.atomic():
-                    rodado = Rodado.objects.create(numero_inventario=row[0].value,
-                                                   descripcion=row[4].value,
-                                                   modelo=row[8].value,
-                                                   chasis=row[9].value,
-                                                   motor=row[10].value,
-                                                   dominio=row[6].value)
-            except IntegrityError:
+                    rodado = Rodado.objects \
+                        .create(numero_inventario=row[0].value,
+                                descripcion=row[4].value,
+                                modelo=row[8].value,
+                                chasis=row[9].value,
+                                motor=row[10].value,
+                                dominio=row[6].value)
+            except IntegrityError, e:
+                print e
                 continue
             else:
                 instances.append(rodado)
@@ -37,17 +55,18 @@ class RodadoQuerySet(QuerySet):
 
 
 class Rodado(models.Model):
+    lote = models.ForeignKey(Lote, blank=True, null=True)
+    tipo = models.ForeignKey(Tipo)
     numero_inventario = models.IntegerField(unique=True)
     descripcion = models.TextField(blank=True, null=True)
     modelo = models.CharField(max_length=50)
     chasis = models.CharField(max_length=50)
     motor = models.CharField(max_length=50)
     dominio = models.CharField(max_length=50)
+    marca = models.CharField(max_length=100)
     anio = models.IntegerField("Año", blank=True, null=True)
     precio_base = models.FloatField(default=0)
     precio_venta = models.FloatField(default=0)
-    lote = models.IntegerField(default=0)
-    chatarra = models.BooleanField(default=False)
 
     subastado = models.BooleanField(default=False)
 
@@ -78,28 +97,42 @@ class Subasta(models.Model):
     bienes = models.ManyToManyField(Rodado)
     personas = models.ManyToManyField('personas.Persona',
                                       blank=True, null=True)
-    actas = models.ManyToManyField('Acta', blank=True, null=True)
 
     objects = SubastaManager()
 
     def __unicode__(self):
-        return "%s %s" % (self.numero, self.decreto)
+        return "%s" % self.fecha_hora
 
     def close(self):
         self.cerrado_el = timezone.now()
         self.save()
 
 
+class Grupo(models.Model):
+    subasta = models.ForeignKey(Subasta,
+                                related_name='grupos',
+                                blank=True,
+                                null=True)
+    numero = models.IntegerField()
+    subastado = models.BooleanField(default=False)
+    martillero = models.ForeignKey('personas.Profesional')
+
+    def __unicode__(self):
+        return "%s" % self.numero
+
+
 class Acta(models.Model):
-    bien_rodado = models.ForeignKey(Rodado)
+    subasta = models.ForeignKey('subastas.Subasta', related_name='actas')
+    lote = models.OneToOneField(Lote)
     persona = models.ForeignKey('personas.Persona')
     profesionales = models.ManyToManyField('personas.Profesional')
     descripcion = models.TextField(blank=True, null=True)
 
     def __unicode__(self):
-        return "%s ==> %s" % (self.bien_rodado, self.persona)
+        return "Lote: %s comprado por: %s" % (self.lote, self.persona)
 
-    def save(self, *args, **kwargs):
-        self.bien_rodado.subastado = True
-        self.bien_rodado.save()
-        super(Acta, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     for bien in Rodado.objects.filter(lote=self.lote):
+    #         bien.subastado = True
+    #         bien.save()
+    #     super(Acta, self).save(*args, **kwargs)
