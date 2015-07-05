@@ -28,27 +28,7 @@
         Ninguna subasta en curso
     {% endif %}
 
-    <h2>Próximas Subastas</h2>
-    <div class="list-group">
-        {% for subasta in next_subastas %}
-          <a href="#" class="list-group-item">
-            {{ subasta.fecha_hora | date:'d/m/Y' }}
-            <span class="badge pull-right">
-                Actas: {{ subasta.actas.count }}
-            </span>
-            <span class="badge pull-right">
-                Rodados: {{ subasta.bienes.count }}
-            </span>
-            <span class="badge pull-right">
-                Inscriptos: {{ subasta.personas.count }}
-            </span>
-          </a>
-        {% empty %}
-            No existen subastas
-        {% endfor %}
-    </div>
-
-    <h2>Subastas Anteriores</h2>
+    <h2>Subastas cerradas</h2>
     <div class="list-group">
         {% for subasta in object_list %}
           <a href="#" class="list-group-item">

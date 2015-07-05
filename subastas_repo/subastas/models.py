@@ -83,12 +83,8 @@ class Rodado(models.Model):
 
 class SubastaManager(models.Manager):
     def get_current(self):
-        now = timezone.now()
         return super(SubastaManager, self).get_queryset() \
-            .filter(fecha_hora__day=now.day,
-                    fecha_hora__month=now.month,
-                    fecha_hora__year=now.year,
-                    cerrado_el=None).last()
+            .filter(cerrado_el=None).last()
 
 
 class Subasta(models.Model):
@@ -101,6 +97,9 @@ class Subasta(models.Model):
     profesionales = models.ManyToManyField('personas.Profesional')
     personas = models.ManyToManyField('personas.Persona',
                                       blank=True, null=True)
+    created_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+    user_updated = models.ForeignKey('users.User', blank=True, null=True)
 
     objects = SubastaManager()
 
@@ -118,7 +117,9 @@ class Grupo(models.Model):
                                 blank=True, null=True)
     numero = models.IntegerField()
     subastado = models.BooleanField(default=False)
-    martillero = models.ForeignKey('personas.Profesional')
+    martillero = models.ForeignKey('personas.Profesional',
+                                   blank=True,
+                                   null=True)
 
     def __unicode__(self):
         return "%s" % self.numero

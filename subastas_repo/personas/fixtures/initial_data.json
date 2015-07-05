@@ -1,0 +1,31 @@
+[{
+    "fields": {
+        "nombre": "martillero"
+    },
+    "model": "personas.titulo",
+    "pk": 1
+}, {
+    "fields": {
+        "nombre": "escribano"
+    },
+    "model": "personas.titulo",
+    "pk": 2
+}, {
+    "fields": {
+        "nombre": "contador"
+    },
+    "model": "personas.titulo",
+    "pk": 3
+}, {
+    "fields": {
+        "nombre": "contadora"
+    },
+    "model": "personas.titulo",
+    "pk": 4
+}, {
+    "fields": {
+        "nombre": "A.U.S."
+    },
+    "model": "personas.titulo",
+    "pk": 5
+}]

@@ -47,16 +47,12 @@ class SubastaListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         """Subastas anteriores o cerradas"""
-        return Subasta.objects.filter(Q(cerrado_el__lt=timezone.now()) |
-                                      Q(fecha_hora__lt=timezone.now())) \
-                              .exclude(fecha_hora__day=timezone.now().day)
+        return Subasta.objects.filter(Q(cerrado_el__lte=timezone.now()) |
+                                      Q(fecha_hora__lte=timezone.now()))
 
     def get_context_data(self, **kwargs):
         context = super(SubastaListView, self).get_context_data(**kwargs)
         context['current'] = Subasta.objects.get_current()
-        next_subastas = Subasta.objects.filter(fecha_hora__gt=timezone.now()) \
-                                       .exclude(fecha_hora__day=timezone.now().day)
-        context['next_subastas'] = next_subastas
         return context
 
 
@@ -292,7 +288,7 @@ class LoteCreateView(LoginRequiredMixin, CreateView):
     template_name = 'subastas/lotes/form.html'
 
     def get_success_url(self):
-        return reverse('subastas:lotes', args=(self.kwargs.get('grupo_id'), ))
+        return reverse('subastas:grupos_detail', args=(self.kwargs.get('grupo_id'), ))
 
     def form_valid(self, form):
         lote = form.save(commit=False)

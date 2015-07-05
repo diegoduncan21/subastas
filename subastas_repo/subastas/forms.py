@@ -6,7 +6,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Reset, Layout, Div
 
 from .models import Acta, Grupo, Lote, Rodado, Subasta
-from personas.models import Persona
+from personas.models import Persona, Profesional
 
 
 class ActaForm(forms.ModelForm):
@@ -42,13 +42,13 @@ class SubastaForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(SubastaForm, self).__init__(*args, **kwargs)
-        # Mostrar solo los bienes no subastados
-        self.fields['bienes'].queryset = Rodado.objects.no_subastados()
+        self.fields['profesionales'].queryset = Profesional.objects \
+            .exclude(titulo__nombre__iexact='martillero')
 
         instance = kwargs.get('instance', None)
         if instance:
             form_action = reverse("subastas:update",
-                                       args=(self.instance.id, ))
+                                  args=(self.instance.id, ))
         else:
             form_action = reverse("subastas:create")
 
@@ -120,6 +120,9 @@ class RodadoForm(forms.ModelForm):
 class GrupoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(GrupoForm, self).__init__(*args, **kwargs)
+
+        self.fields['martillero'].queryset = Profesional.objects \
+            .filter(titulo__nombre__iexact='martillero')
 
         self.helper = FormHelper()
         self.helper.form_method = "post"

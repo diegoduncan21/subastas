@@ -20,22 +20,21 @@ class Persona(models.Model):
         return "%s, %s (%s)" % (self.apellidos, self.nombres, self.dni)
 
 
-class Profesional(models.Model):
-    TITULOS = Choices(('abogado', 'Abogado'),
-                      ('escribano', 'Escribano'),
-                      ('martillero', 'Martillero'))
+class Titulo(models.Model):
+    nombre = models.CharField(max_length=100)
 
+    def __unicode__(self):
+        return self.nombre
+
+
+class Profesional(models.Model):
     nombres = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)
     dni = models.CharField('DNI',
                            max_length=10,
                            blank=True,
                            null=True)
-    titulo = models.CharField('Titulo',
-                              choices=TITULOS,
-                              max_length=100,
-                              blank=True,
-                              null=True)
+    titulo = models.ForeignKey(Titulo, blank=True, null=True)
     matricula = models.CharField('Número Matrícula',
                                  max_length=50,
                                  blank=True,
