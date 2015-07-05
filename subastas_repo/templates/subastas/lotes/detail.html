@@ -1,0 +1,19 @@
+{% extends 'subastas/bases/admin_base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content_administrador %}
+    <h2>
+        Lote {{ object }}
+    </h2>
+
+    <div class="list-group">
+        {% for bien in object.bienes.all %}
+          <a href="#" class="list-group-item">
+            {{ bien }}
+          </a>
+        {% empty %}
+            Este Lote no tiene bienes asociados.
+        {% endfor %}
+    </div>
+{% endblock %}

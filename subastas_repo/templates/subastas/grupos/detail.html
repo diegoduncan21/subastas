@@ -1,0 +1,29 @@
+{% extends 'subastas/bases/admin_base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content_administrador %}
+    <h2>
+        Grupo {{ object }}
+        <small class="text-center">
+            Martillero asignado: {{ object.martillero }}
+        </small>
+        <a class="btn btn-primary pull-right" href="{% url 'subastas:lotes_create' object.id %}">Agregar Lote</a>
+    </h2>
+
+    <h3>
+        Lotes
+        <small>
+            {{ object.lotes.all.count }}
+        </small>
+    </h3>
+    <div class="list-group">
+        {% for lote in object.lotes.all %}
+          <a href="{% url 'subastas:lotes_detail' lote.id lote.grupo.id %}" class="list-group-item">
+            {{ lote }}
+          </a>
+        {% empty %}
+            Este Grupo no tiene lotes asociados.
+        {% endfor %}
+    </div>
+{% endblock %}

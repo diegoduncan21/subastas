@@ -5,7 +5,7 @@ from django.db.models import Q
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Reset, Layout, Div
 
-from .models import Acta, Grupo, Rodado, Subasta
+from .models import Acta, Grupo, Lote, Rodado, Subasta
 from personas.models import Persona
 
 
@@ -63,11 +63,17 @@ class SubastaForm(forms.ModelForm):
                 'fecha_hora',
                 'decreto',
                 'domicilio',
-                'profesionales',
-                'bienes')
+                'profesionales')
         )
 
     class Meta:
+        fields = [
+            'numero',
+            'fecha_hora',
+            'decreto',
+            'domicilio',
+            'profesionales',
+        ]
         model = Subasta
 
 
@@ -127,4 +133,31 @@ class GrupoForm(forms.ModelForm):
         )
 
     class Meta:
+        fields = [
+            "numero",
+            "martillero",
+        ]
         model = Grupo
+
+
+class LoteForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.grupo_id = kwargs.pop('grupo_id', None)
+        super(LoteForm, self).__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.form_method = "post"
+        self.helper.form_action = reverse("subastas:lotes_create",
+                                          args=(self.grupo_id, ))
+        self.helper.add_input(Submit('lote_submit', 'Guardar'))
+        self.helper.add_input(Reset('lote_reset', 'Limpiar',
+                              css_class='btn-default'))
+        self.helper.layout = Layout(
+            Div('numero')
+        )
+
+    class Meta:
+        fields = [
+            'numero',
+        ]
+        model = Lote

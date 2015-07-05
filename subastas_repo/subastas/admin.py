@@ -33,7 +33,7 @@ class SubastaAdmin(admin.ModelAdmin):
         'decreto',
         'domicilio',
     ]
-    filter_horizontal = ('bienes', 'personas', 'profesionales')
+    filter_horizontal = ('personas', 'profesionales')
 
 admin.site.register(Acta, ActaAdmin)
 admin.site.register(Grupo)

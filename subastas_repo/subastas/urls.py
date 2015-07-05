@@ -73,9 +73,29 @@ urlpatterns = patterns('subastas.views',
         name='grupos'
     ),
     url(
+        regex=r'^grupos/(?P<pk>\d+)$',
+        view=views.GrupoDetailView.as_view(),
+        name='grupos_detail'
+    ),
+    url(
         regex=r'^grupos/nuevo/$',
         view=views.GrupoCreateView.as_view(),
         name='grupos_create'
+    ),
+    url(
+        regex=r'^lotes/(?P<grupo_id>\d+)$',
+        view=views.LoteListView.as_view(),
+        name='lotes'
+    ),
+    url(
+        regex=r'^lotes/(?P<pk>\d+)/(?P<grupo_id>\d+)$',
+        view=views.LoteDetailView.as_view(),
+        name='lotes_detail'
+    ),
+    url(
+        regex=r'^lotes/nuevo/(?P<grupo_id>\d+)$',
+        view=views.LoteCreateView.as_view(),
+        name='lotes_create'
     ),
     # Sin permisos
     url(

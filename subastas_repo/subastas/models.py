@@ -10,12 +10,15 @@ from openpyxl import load_workbook
 
 
 class Lote(models.Model):
+    grupo = models.ForeignKey('Grupo',
+                              related_name='lotes',
+                              blank=True, null=True)
     numero = models.IntegerField()
     subastado = models.BooleanField(default=False)
     chatarra = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return self.numero
+        return "%s" % self.numero
 
 
 class Tipo(models.Model):
@@ -55,7 +58,9 @@ class RodadoQuerySet(QuerySet):
 
 
 class Rodado(models.Model):
-    lote = models.ForeignKey(Lote, blank=True, null=True)
+    lote = models.ForeignKey(Lote,
+                             related_name="bienes",
+                             blank=True, null=True)
     tipo = models.ForeignKey(Tipo)
     numero_inventario = models.IntegerField(unique=True)
     descripcion = models.TextField(blank=True, null=True)
@@ -94,7 +99,6 @@ class Subasta(models.Model):
     domicilio = models.ForeignKey('personas.Domicilio')
 
     profesionales = models.ManyToManyField('personas.Profesional')
-    bienes = models.ManyToManyField(Rodado)
     personas = models.ManyToManyField('personas.Persona',
                                       blank=True, null=True)
 
@@ -111,8 +115,7 @@ class Subasta(models.Model):
 class Grupo(models.Model):
     subasta = models.ForeignKey(Subasta,
                                 related_name='grupos',
-                                blank=True,
-                                null=True)
+                                blank=True, null=True)
     numero = models.IntegerField()
     subastado = models.BooleanField(default=False)
     martillero = models.ForeignKey('personas.Profesional')

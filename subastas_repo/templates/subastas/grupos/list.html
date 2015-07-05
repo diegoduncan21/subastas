@@ -10,11 +10,14 @@
 
     <div class="list-group">
         {% for grupo in object_list %}
-          <a href="#" class="list-group-item">
+          <a href="{% url 'subastas:grupos_detail' grupo.id %}" class="list-group-item">
             {{ grupo }}
+            <span class="pull-right">
+                Martillero asignado: {{ grupo.martillero }}
+            </span>
           </a>
         {% empty %}
-            No existen grupos.
+            No existen Grupos.
         {% endfor %}
     </div>
 {% endblock %}

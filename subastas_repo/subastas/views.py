@@ -17,9 +17,14 @@ from personas.models import Persona
 from .forms import (ActaForm,
                     GrupoForm,
                     InscriptionForm,
+                    LoteForm,
                     RodadoForm,
                     SubastaForm)
-from .models import Acta, Grupo, Rodado, Subasta
+from .models import (Acta,
+                     Grupo,
+                     Lote,
+                     Rodado,
+                     Subasta)
 
 
 @login_required
@@ -235,6 +240,11 @@ class GrupoListView(LoginRequiredMixin, ListView):
         return subasta.grupos.all()
 
 
+class GrupoDetailView(LoginRequiredMixin, DetailView):
+    model = Grupo
+    template_name = 'subastas/grupos/detail.html'
+
+
 class GrupoCreateView(LoginRequiredMixin, CreateView):
     form_class = GrupoForm
     model = Grupo
@@ -253,3 +263,51 @@ class GrupoCreateView(LoginRequiredMixin, CreateView):
     def form_invalid(self, form):
         print form.errors
         return super(GrupoCreateView, self).form_invalid(form)
+
+
+class LoteListView(LoginRequiredMixin, ListView):
+    model = Lote
+    template_name = 'subastas/lotes/list.html'
+
+    def get_queryset(self):
+        """Lotes de la subasta vigente"""
+        subasta = Subasta.objects.get_current()
+        grupo_id = self.kwargs.get('grupo_id')
+        return subasta.grupos.get(id=grupo_id).lotes.all()
+
+    def get_context_data(self, **kwargs):
+        context = super(LoteListView, self).get_context_data(**kwargs)
+        context['grupo_id'] = self.kwargs.get('grupo_id')
+        return context
+
+
+class LoteDetailView(LoginRequiredMixin, DetailView):
+    model = Lote
+    template_name = 'subastas/lotes/detail.html'
+
+
+class LoteCreateView(LoginRequiredMixin, CreateView):
+    form_class = LoteForm
+    model = Lote
+    template_name = 'subastas/lotes/form.html'
+
+    def get_success_url(self):
+        return reverse('subastas:lotes', args=(self.kwargs.get('grupo_id'), ))
+
+    def form_valid(self, form):
+        lote = form.save(commit=False)
+        lote.grupo = Grupo.objects.get(id=self.kwargs.get('grupo_id'))
+        lote.save()
+        messages.add_message(self.request,
+                             messages.INFO,
+                             'Lote cargado exitosamente.')
+        return super(LoteCreateView, self).form_valid(form)
+
+    def form_invalid(self, form):
+        print form.errors
+        return super(LoteCreateView, self).form_invalid(form)
+
+    def get_form_kwargs(self):
+        kwargs = super(LoteCreateView, self).get_form_kwargs()
+        kwargs['grupo_id'] = self.kwargs.get('grupo_id')
+        return kwargs
