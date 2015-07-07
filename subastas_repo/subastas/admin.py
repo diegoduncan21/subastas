@@ -7,6 +7,12 @@ class ActaAdmin(admin.ModelAdmin):
     filter_horizontal = ('profesionales', )
 
 
+class GrupoAdmin(admin.ModelAdmin):
+    list_display = ['subasta',
+                    'numero',
+                    'martillero']
+
+
 class RodadoAdmin(admin.ModelAdmin):
     list_display = [
         "lote",
@@ -36,7 +42,7 @@ class SubastaAdmin(admin.ModelAdmin):
     filter_horizontal = ('personas', 'profesionales')
 
 admin.site.register(Acta, ActaAdmin)
-admin.site.register(Grupo)
+admin.site.register(Grupo, GrupoAdmin)
 admin.site.register(Lote)
 admin.site.register(Rodado, RodadoAdmin)
 admin.site.register(Subasta, SubastaAdmin)

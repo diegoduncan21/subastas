@@ -18,17 +18,17 @@ urlpatterns = patterns('subastas.views',
         name='create'
     ),
     url(
-        regex=r'^editar/(?P<pk>\d+)$',
+        regex=r'^editar/(?P<pk>\d+)/$',
         view=views.SubastaUpdateView.as_view(),
         name='update'
     ),
     url(
-        regex=r'^cerrar/(?P<subasta_id>\d+)$',
+        regex=r'^cerrar/(?P<subasta_id>\d+)/$',
         view=views.cerrar_subasta,
         name='close'
     ),
     url(
-        regex=r'^actas$',
+        regex=r'^actas/$',
         view=views.ActaListView.as_view(),
         name='actas'
     ),
@@ -38,17 +38,17 @@ urlpatterns = patterns('subastas.views',
         name='actas_create'
     ),
     url(
-        regex=r'^imprimir/(?P<pk>\d+)$',
+        regex=r'^imprimir/(?P<pk>\d+)/$',
         view=views.ActaPrintView.as_view(),
         name='print'
     ),
     url(
-        regex=r'^acreditadores$',
+        regex=r'^acreditadores/$',
         view=views.AcreditadorHomeView.as_view(),
         name='acreditadores'
     ),
     url(
-        regex=r'^bienes$',
+        regex=r'^bienes/$',
         view=views.RodadoListView.as_view(),
         name='rodados'
     ),
@@ -58,17 +58,17 @@ urlpatterns = patterns('subastas.views',
         name='rodados_create'
     ),
     url(
-        regex=r'^bienes/editar/(?P<pk>\d+)$',
+        regex=r'^bienes/editar/(?P<pk>\d+)/$',
         view=views.RodadoUpdateView.as_view(),
         name='rodados_update'
     ),
     url(
-        regex=r'^bienes/nuevo/xlsx$',
+        regex=r'^bienes/nuevo/xlsx/$',
         view=views.upload_xlsx,
         name='rodados_nuevo_xlsx'
     ),
     url(
-        regex=r'^grupos$',
+        regex=r'^grupos/$',
         view=views.GrupoListView.as_view(),
         name='grupos'
     ),
@@ -83,23 +83,33 @@ urlpatterns = patterns('subastas.views',
         name='grupos_create'
     ),
     url(
-        regex=r'^lotes/(?P<grupo_id>\d+)$',
+        regex=r'^grupos/editar/(?P<pk>\d+)/$',
+        view=views.GrupoUpdateView.as_view(),
+        name='grupos_update',
+    ),
+    url(
+        regex=r'^lotes/(?P<grupo_id>\d+)/$',
         view=views.LoteListView.as_view(),
         name='lotes'
     ),
     url(
-        regex=r'^lotes/(?P<pk>\d+)/(?P<grupo_id>\d+)$',
+        regex=r'^lotes/(?P<pk>\d+)/(?P<grupo_id>\d+)/$',
         view=views.LoteDetailView.as_view(),
         name='lotes_detail'
     ),
     url(
-        regex=r'^lotes/nuevo/(?P<grupo_id>\d+)$',
+        regex=r'^lotes/nuevo/(?P<grupo_id>\d+)/$',
         view=views.LoteCreateView.as_view(),
         name='lotes_create'
     ),
+    url(
+        regex=r'^lotes/editar/(?P<grupo_id>\d+)/$',
+        view=views.LoteUpdateView.as_view(),
+        name='lotes_update'
+    ),
     # Sin permisos
     url(
-        regex=r'^sin_permisos$',
+        regex=r'^sin_permisos/$',
         view=TemplateView.as_view(
             template_name='subastas/sin_permisos.html'),
         name='sin_permisos'

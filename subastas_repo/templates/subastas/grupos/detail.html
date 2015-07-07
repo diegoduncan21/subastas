@@ -4,7 +4,7 @@
 
 {% block content_administrador %}
     <h2>
-        Grupo {{ object }}
+        <a href="{% url 'subastas:grupos' %}">Grupo {{ object }}</a>
         <small class="text-center">
             Martillero asignado: {{ object.martillero }}
         </small>
@@ -19,9 +19,19 @@
     </h3>
     <div class="list-group">
         {% for lote in object.lotes.all %}
-          <a href="{% url 'subastas:lotes_detail' lote.id lote.grupo.id %}" class="list-group-item">
+          <li class="list-group-item clearfix">
             {{ lote }}
-          </a>
+
+            <span class="pull-right">
+                <a href="{% url 'subastas:lotes_detail' lote.id lote.grupo.id %}"
+                   class="btn btn-xs btn-info">
+                    <i class="fa fa-eye"></i>
+                </a>
+                <a href="#" class="btn btn-xs btn-warning">
+                    <i class="fa fa-pencil"></i>
+                </a>
+            </span>
+          </li>
         {% empty %}
             Este Grupo no tiene lotes asociados.
         {% endfor %}

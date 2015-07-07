@@ -10,16 +10,25 @@
 
     <div class="list-group">
         {% for grupo in object_list %}
-          <a href="{% url 'subastas:grupos_detail' grupo.id %}" class="list-group-item">
+          <li class="list-group-item clearfix">
             {{ grupo }}
-            <span class="pull-right">
+            <span style="margin-left: 25px;">
                 {% if grupo.martillero %}
                     Martillero asignado: {{ grupo.martillero }}
                 {% else %}
                     No tiene Martillero asignado.
                 {% endif %}
             </span>
-          </a>
+            <span class="pull-right">
+                <a href="{% url 'subastas:grupos_detail' grupo.id %}"
+                   class="btn btn-xs btn-info">
+                    <i class="fa fa-eye"></i>
+                </a>
+                <a href="{% url 'subastas:grupos_update' grupo.id %}" class="btn btn-xs btn-warning">
+                    <i class="fa fa-pencil"></i>
+                </a>
+            </span>
+          </li>
         {% empty %}
             No existen Grupos.
         {% endfor %}

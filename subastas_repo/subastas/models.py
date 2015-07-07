@@ -20,6 +20,9 @@ class Lote(models.Model):
     def __unicode__(self):
         return "%s" % self.numero
 
+    class Meta:
+        unique_together = ('grupo', 'numero')
+
 
 class Tipo(models.Model):
     nombre = models.CharField(max_length=100)
@@ -110,6 +113,11 @@ class Subasta(models.Model):
         self.cerrado_el = timezone.now()
         self.save()
 
+    @property
+    def lotes(self):
+        grupos = self.grupos.all()
+        return Lote.objects.filter(grupo__in=grupos)
+
 
 class Grupo(models.Model):
     subasta = models.ForeignKey(Subasta,
@@ -123,6 +131,9 @@ class Grupo(models.Model):
 
     def __unicode__(self):
         return "%s" % self.numero
+
+    class Meta:
+        unique_together = ('subasta', 'numero')
 
 
 class Acta(models.Model):
