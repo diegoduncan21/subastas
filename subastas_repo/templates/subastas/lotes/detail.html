@@ -7,13 +7,47 @@
         Lote {{ object }}
     </h2>
 
-    <div class="list-group">
-        {% for bien in object.bienes.all %}
-          <a href="#" class="list-group-item">
-            {{ bien }}
-          </a>
-        {% empty %}
-            Este Lote no tiene bienes asociados.
-        {% endfor %}
-    </div>
+    <h3>
+        Bienes rodados
+        <small>
+            {{ object.bienes.count }}
+        </small>
+    </h3>
+
+    {% if object.bienes.count %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Tipo</th>
+                    <th>N° Inventario</th>
+                    <th>Descripcion</th>
+                    <th>Modelo</th>
+                    <th>Chasis</th>
+                    <th>Motor</th>
+                    <th>Dominio</th>
+                    <th>Marca</th>
+                    <th>Año</th>
+                    <th>Precio base</th>
+                    <th>Precio venta</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for bien in object.bienes.all %}
+                    <td>{{ bien.tipo }}</td>
+                    <td>{{ bien.numero_inventario }}</td>
+                    <td>{{ bien.descripcion }}</td>
+                    <td>{{ bien.modelo }}</td>
+                    <td>{{ bien.chasis }}</td>
+                    <td>{{ bien.motor }}</td>
+                    <td>{{ bien.dominio }}</td>
+                    <td>{{ bien.marca }}</td>
+                    <td>{{ bien.anio }}</td>
+                    <td>{{ bien.precio_base }}</td>
+                    <td>{{ bien.precio_venta }}</td>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        Este Lote no tiene bienes asociados.
+    {% endif %}
 {% endblock %}

@@ -163,6 +163,7 @@ class Common(Configuration):
         'django.contrib.messages.context_processors.messages',
         'django.core.context_processors.request',
         # Your stuff: custom template context processers go here
+        'subastas.context_processors.current_subasta',
     )
 
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#template-dirs

@@ -1,24 +1,60 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="col-md-2">
-      </ul>
-        <li class="list-group-item"><a href="{% url 'subastas:list' %}">Subastas</a></li>
-        <li class="list-group-item"><a href="{% url 'users:list' %}">Usuarios</a></li>
-        <li class="list-group-item">
-          <a href="{% url 'personas:profesionales_list' %}">
-            Profesionales
-          </a>
-        </li>
-        <li class="list-group-item">
-          <a href="{% url 'subastas:rodados' %}">
-            Bienes
-          </a>
-        </li>
-      </ul>
+    <div class="col-md-3">
+        <ul class="nav nav-pills nav-stacked">
+            <li class="nav-header">
+                <a>
+                    Menu
+                </a>
+            </li>
+            <li><a href="{% url 'subastas:list' %}">Subastas</a></li>
+            <li><a href="{% url 'users:list' %}">Usuarios</a></li>
+            <li>
+              <a href="{% url 'personas:profesionales_list' %}">
+                Profesionales
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'subastas:rodados' %}">
+                Bienes
+              </a>
+            </li>
+        </ul>
+        {% if current_subasta %}
+            <br>
+
+            <ul class="nav nav-pills nav-stacked">
+                <li class="nav-header">
+                    <a>
+                        Subasta vigente
+                        <span class="badge">{{ current_subasta.fecha_hora|date:'d/m/Y' }}</span>
+                    </a>
+                </li>
+                <li><a href="{% url 'subastas:lotes' %}">Lotes</a></li>
+                <li>
+                    <a href="{% url 'subastas:lotes_create' %}">
+                        Agregar Lote
+                    </a>
+                </li>
+                <li><a href="{% url 'subastas:grupos' %}">Grupos</a></li>
+                <li>
+                    <a href="{% url 'subastas:grupos_create' %}">
+                        Agregar Grupo
+                    </a>
+                </li>
+                <li>
+                    <a href="#">Actas</a>
+                </li>
+                <li>
+                    <a href="#">Agregar Acta</a>
+                </li>
+            </ul>
+        {% endif %}
     </div>
 
-     <div class="col-md-10">
+
+     <div class="col-md-9">
         {% block content_administrador %}{% endblock content_administrador %}
     </div>
 {% endblock content %}

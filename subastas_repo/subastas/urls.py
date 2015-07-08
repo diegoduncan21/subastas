@@ -88,22 +88,22 @@ urlpatterns = patterns('subastas.views',
         name='grupos_update',
     ),
     url(
-        regex=r'^lotes/(?P<grupo_id>\d+)/$',
+        regex=r'^lotes/$',
         view=views.LoteListView.as_view(),
         name='lotes'
     ),
     url(
-        regex=r'^lotes/(?P<pk>\d+)/(?P<grupo_id>\d+)/$',
+        regex=r'^lotes/(?P<pk>\d+)/$',
         view=views.LoteDetailView.as_view(),
         name='lotes_detail'
     ),
     url(
-        regex=r'^lotes/nuevo/(?P<grupo_id>\d+)/$',
+        regex=r'^lotes/nuevo/$',
         view=views.LoteCreateView.as_view(),
         name='lotes_create'
     ),
     url(
-        regex=r'^lotes/editar/(?P<grupo_id>\d+)/$',
+        regex=r'^lotes/editar/(?P<pk>\d+)/$',
         view=views.LoteUpdateView.as_view(),
         name='lotes_update'
     ),

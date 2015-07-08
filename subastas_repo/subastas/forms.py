@@ -160,23 +160,28 @@ class GrupoForm(forms.ModelForm):
 
 class LoteForm(forms.ModelForm):
     rodados = forms.ModelMultipleChoiceField(
-        [],
+        Rodado.objects.no_subastados(),
         required=False,
         widget=forms.CheckboxSelectMultiple
     )
 
     def __init__(self, *args, **kwargs):
-        self.grupo_id = kwargs.pop('grupo_id', None)
         self.rodados_query = kwargs.pop('rodados_query', None)
         super(LoteForm, self).__init__(*args, **kwargs)
 
         if self.rodados_query:
             self.fields['rodados'].queryset = self.rodados_query
 
+        instance = kwargs.get('instance', None)
+        if instance:
+            form_action = reverse("subastas:lotes_update",
+                                  args=(instance.id, ))
+        else:
+            form_action = reverse("subastas:lotes_create")
+
         self.helper = FormHelper()
         self.helper.form_method = "post"
-        self.helper.form_action = reverse("subastas:lotes_create",
-                                          args=(self.grupo_id, ))
+        self.helper.form_action = form_action
         self.helper.add_input(Submit('lote_submit', 'Guardar'))
         self.helper.add_input(Reset('lote_reset', 'Limpiar',
                               css_class='btn-default'))
@@ -187,8 +192,7 @@ class LoteForm(forms.ModelForm):
 
     def clean_numero(self):
         numero = self.cleaned_data.get('numero')
-        grupo = Grupo.objects.get(id=self.grupo_id)
-        if Lote.objects.filter(grupo=grupo,
+        if Lote.objects.filter(grupo=None,
                                numero=numero).exists():
             raise forms.ValidationError("Este Lote ya existe.")
         return numero

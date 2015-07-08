@@ -23,11 +23,11 @@
             {{ lote }}
 
             <span class="pull-right">
-                <a href="{% url 'subastas:lotes_detail' lote.id lote.grupo.id %}"
+                <a href="{% url 'subastas:lotes_detail' lote.id %}"
                    class="btn btn-xs btn-info">
                     <i class="fa fa-eye"></i>
                 </a>
-                <a href="#" class="btn btn-xs btn-warning">
+                <a href="{% url 'subastas:lotes_update' lote.id %}" class="btn btn-xs btn-warning">
                     <i class="fa fa-pencil"></i>
                 </a>
             </span>

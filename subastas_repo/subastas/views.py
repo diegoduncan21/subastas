@@ -50,11 +50,6 @@ class SubastaListView(LoginRequiredMixin, ListView):
         return Subasta.objects.filter(Q(cerrado_el__lte=timezone.now()) |
                                       Q(fecha_hora__lte=timezone.now()))
 
-    def get_context_data(self, **kwargs):
-        context = super(SubastaListView, self).get_context_data(**kwargs)
-        context['current'] = Subasta.objects.get_current()
-        return context
-
 
 class SubastaCreateView(LoginRequiredMixin, CreateView):
     form_class = SubastaForm
@@ -105,13 +100,6 @@ class ActaListView(LoginRequiredMixin, ListView):
         else:
             return None
 
-    def get_context_data(self, **kwargs):
-        self.current_subasta = Subasta.objects.get_current()
-        context = super(ActaListView, self).get_context_data(**kwargs)
-        if self.current_subasta:
-            context['current_subasta'] = self.current_subasta
-        return context
-
 
 class ActaCreateView(LoginRequiredMixin, CreateView):
     form_class = ActaForm
@@ -150,7 +138,6 @@ class AcreditadorHomeView(LoginRequiredMixin, FormView):
         self.current_subasta = Subasta.objects.get_current()
         context = super(AcreditadorHomeView, self).get_context_data(**kwargs)
         if self.current_subasta:
-            context['current_subasta'] = self.current_subasta
             context['personas'] = self.current_subasta.personas.all() \
                 .order_by('apellidos')
 
@@ -182,11 +169,6 @@ class RodadoListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         """Bienes sin subastar"""
         return Rodado.objects.no_subastados()
-
-    def get_context_data(self, **kwargs):
-        context = super(RodadoListView, self).get_context_data(**kwargs)
-        context['current_subasta'] = Subasta.objects.get_current()
-        return context
 
 
 class RodadoCreateView(LoginRequiredMixin, CreateView):
@@ -276,15 +258,8 @@ class LoteListView(LoginRequiredMixin, ListView):
     template_name = 'subastas/lotes/list.html'
 
     def get_queryset(self):
-        """Lotes de la subasta vigente"""
-        subasta = Subasta.objects.get_current()
-        grupo_id = self.kwargs.get('grupo_id')
-        return subasta.grupos.get(id=grupo_id).lotes.all()
-
-    def get_context_data(self, **kwargs):
-        context = super(LoteListView, self).get_context_data(**kwargs)
-        context['grupo_id'] = self.kwargs.get('grupo_id')
-        return context
+        """Lotes que no tienen grupo (son los de la subasta vigente)"""
+        return Lote.objects.filter(grupo=None)
 
 
 class LoteDetailView(LoginRequiredMixin, DetailView):
@@ -298,13 +273,10 @@ class LoteCreateView(LoginRequiredMixin, CreateView):
     template_name = 'subastas/lotes/form.html'
 
     def get_success_url(self):
-        return reverse('subastas:grupos_detail',
-                       args=(self.kwargs.get('grupo_id'), ))
+        return reverse('subastas:lotes')
 
     def form_valid(self, form):
-        lote = form.save(commit=False)
-        lote.grupo = Grupo.objects.get(id=self.kwargs.get('grupo_id'))
-        lote.save()
+        lote = form.save()
 
         rodados = form.cleaned_data.get('rodados', None)
         if rodados:
@@ -316,7 +288,6 @@ class LoteCreateView(LoginRequiredMixin, CreateView):
 
     def get_form_kwargs(self):
         kwargs = super(LoteCreateView, self).get_form_kwargs()
-        kwargs['grupo_id'] = self.kwargs.get('grupo_id')
 
         # solo los rodados que no estan subastados y no estan
         # asociados a un lote de una subasta vigente
@@ -328,4 +299,36 @@ class LoteCreateView(LoginRequiredMixin, CreateView):
 
 
 class LoteUpdateView(LoginRequiredMixin, UpdateView):
-    pass
+    form_class = LoteForm
+    model = Lote
+    template_name = 'subastas/lotes/form.html'
+
+    def get_success_url(self):
+        return reverse('subastas:lotes')
+
+    def form_valid(self, form):
+        lote = form.save(commit=False)
+        lote.bienes.update(lote=None)
+        lote.save()
+
+        rodados = form.cleaned_data.get('rodados', None)
+        if rodados:
+            rodados.update(lote=lote)
+        messages.add_message(self.request,
+                             messages.INFO,
+                             'Lote modificado exitosamente.')
+        return super(LoteUpdateView, self).form_valid(form)
+
+    def get_form_kwargs(self):
+        kwargs = super(LoteUpdateView, self).get_form_kwargs()
+
+        # solo los rodados que no estan subastados y no estan
+        # asociados a un lote de una subasta vigente
+        lotes = Subasta.objects.get_current().lotes
+        no_subastados = Rodado.objects.no_subastados()
+        sin_lote = no_subastados.exclude(lote__in=lotes)
+        kwargs['rodados_query'] = sin_lote | self.get_object().bienes.all()
+        return kwargs
+
+    def get_initial(self):
+        return {'rodados': self.get_object().bienes.all()}

@@ -40,6 +40,14 @@
   padding: 10px 25px;
 }
 
+.nav > li.nav-header > a {
+    cursor: default;
+    font-size: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #bbbbbb;
+}
+
 #AcreditadoresTab {
   margin-bottom: 20px;
 }

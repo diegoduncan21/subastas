@@ -44,6 +44,15 @@
 }
 
 /* line 43, ../sass/project.scss */
+.nav > li.nav-header > a {
+  cursor: default;
+  font-size: 15px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #bbbbbb;
+}
+
+/* line 51, ../sass/project.scss */
 #AcreditadoresTab {
   margin-bottom: 20px;
 }

@@ -5,14 +5,24 @@
 {% block content_administrador %}
     <h2>
         Lotes
-        <a class="btn btn-primary pull-right" href="{% url 'subastas:lotes_create' grupo_id %}">Agregar Lote</a>
+        <a class="btn btn-primary pull-right" href="{% url 'subastas:lotes_create' %}">Agregar Lote</a>
     </h2>
 
     <div class="list-group">
         {% for lote in object_list %}
-          <a href="#" class="list-group-item">
+          <li class="list-group-item clearfix">
             {{ lote }}
-          </a>
+
+            <span class="pull-right">
+                <a href="{% url 'subastas:lotes_detail' lote.id %}"
+                   class="btn btn-xs btn-info">
+                    <i class="fa fa-eye"></i>
+                </a>
+                <a href="{% url 'subastas:lotes_update' lote.id %}" class="btn btn-xs btn-warning">
+                    <i class="fa fa-pencil"></i>
+                </a>
+            </span>
+          </li>
         {% empty %}
             No existen Lotes.
         {% endfor %}

@@ -6,37 +6,18 @@
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default">
-              <div class="panel-heading">
+              <div class="panel-heading clearfix">
                 <h1>
                     {% block header %}
                         {% if instance %}
-                            Modificar Subasta: {{ instance }}
+                            Modificar Subasta: {{ instance.fecha_hora|date:'d/m/Y' }}
 
-                            <div class="dropdown pull-right">
-                              <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                Opciones
-                                <span class="caret"></span>
-                              </button>
-                              <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                                <li class="dropdown-header">Grupos</li>
-                                <li><a href="{% url 'subastas:grupos' %}">Listar</a></li>
-                                <li><a href="{% url 'subastas:grupos_create' %}">Agregar</a></li>
-                                <li class="dropdown-header">Actas</li>
-                                <li><a href="#">Listar</a></li>
-                                <li><a href="#">Agregar</a></li>
-                                <li role="separator" class="divider"></li>
-                                <li>
-                                    <a href="{% url 'subastas:close' instance.id %}" class="btn btn-danger">
-                                        Cerrar subasta
-                                    </a>
-                                </li>
-                              </ul>
-                            </div>
+                            <a href="{% url 'subastas:close' instance.id %}" class="btn btn-sm btn-danger pull-right">
+                                Cerrar subasta
+                            </a>
                         {% else %}
                             Agregar Subasta
                         {% endif %}
-
-
 
                     {% endblock %}
                 </h1>

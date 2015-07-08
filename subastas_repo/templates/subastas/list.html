@@ -6,21 +6,21 @@
         Subasta vigente
         <a class="btn btn-primary pull-right" href="{% url 'subastas:create' %}">Agregar Subasta</a>
     </h2>
-    {% if current %}
+    {% if current_subasta %}
         <div class="list-group">
-            <a href="{% url 'subastas:update' current.id %}" class="list-group-item list-group-item-success">
-                {{ current.fecha_hora | date:'d/m/Y' }}
+            <a href="{% url 'subastas:update' current_subasta.id %}" class="list-group-item list-group-item-success">
+                {{ current_subasta.fecha_hora|date:'d/m/Y' }}
                 <span class="badge pull-right">
-                    Actas: {{ current.actas.count }}
+                    Actas: {{ current_subasta.actas.count }}
                 </span>
                 <span class="badge pull-right">
-                    Grupos: {{ current.grupos.count }}
+                    Grupos: {{ current_subasta.grupos.count }}
                 </span>
                 <span class="badge pull-right">
-                    Rodados: {{ current.bienes.count }}
+                    Rodados: {{ current_subasta.bienes.count }}
                 </span>
                 <span class="badge pull-right">
-                    Inscriptos: {{ current.personas.count }}
+                    Inscriptos: {{ current_subasta.personas.count }}
                 </span>
             </a>
         </div>
