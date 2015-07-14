@@ -233,10 +233,23 @@ class GrupoCreateView(LoginRequiredMixin, CreateView):
         grupo = form.save(commit=False)
         grupo.subasta = Subasta.objects.get_current()
         grupo.save()
+
+        lotes = form.cleaned_data.get('lotes', None)
+        if lotes:
+            lotes.update(grupo=grupo)
         messages.add_message(self.request,
                              messages.INFO,
                              'Grupo cargado exitosamente.')
         return super(GrupoCreateView, self).form_valid(form)
+
+    def get_form_kwargs(self):
+        kwargs = super(GrupoCreateView, self).get_form_kwargs()
+
+        # solo los lotes que no tienen grupo y su subasta no esta cerrada
+        lotes = Lote.objects.filter(grupo__subasta__cerrado_el=None,
+                                    grupo=None)
+        kwargs['lotes'] = lotes
+        return kwargs
 
 
 class GrupoUpdateView(LoginRequiredMixin, UpdateView):
@@ -247,10 +260,29 @@ class GrupoUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'subastas/grupos/form.html'
 
     def form_valid(self, form):
+        grupo = form.save(commit=False)
+        grupo.lotes.update(grupo=None)
+
+        lotes = form.cleaned_data.get('lotes', None)
+        if lotes:
+            lotes.update(grupo=grupo)
+
         messages.add_message(self.request,
                              messages.INFO,
                              'Grupo modificado exitosamente.')
         return super(GrupoUpdateView, self).form_valid(form)
+
+    def get_initial(self):
+        return {'lotes': self.get_object().lotes.all()}
+
+    def get_form_kwargs(self):
+        kwargs = super(GrupoUpdateView, self).get_form_kwargs()
+
+        # solo los lotes que no tienen grupo y su subasta no esta cerrada
+        lotes = Lote.objects.filter(grupo__subasta__cerrado_el=None,
+                                    grupo=None)
+        kwargs['lotes'] = lotes | self.get_object().lotes.all()
+        return kwargs
 
 
 class LoteListView(LoginRequiredMixin, ListView):
@@ -259,7 +291,7 @@ class LoteListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         """Lotes que no tienen grupo (son los de la subasta vigente)"""
-        return Lote.objects.filter(grupo=None)
+        return Lote.objects.filter(grupo__subasta__cerrado_el=None)
 
 
 class LoteDetailView(LoginRequiredMixin, DetailView):
@@ -291,7 +323,7 @@ class LoteCreateView(LoginRequiredMixin, CreateView):
 
         # solo los rodados que no estan subastados y no estan
         # asociados a un lote de una subasta vigente
-        lotes = Subasta.objects.get_current().lotes
+        lotes = Lote.objects.filter(grupo__subasta__cerrado_el=None)
         no_subastados = Rodado.objects.no_subastados()
         sin_lote = no_subastados.exclude(lote__in=lotes)
         kwargs['rodados_query'] = sin_lote
@@ -309,7 +341,6 @@ class LoteUpdateView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         lote = form.save(commit=False)
         lote.bienes.update(lote=None)
-        lote.save()
 
         rodados = form.cleaned_data.get('rodados', None)
         if rodados:
@@ -324,10 +355,10 @@ class LoteUpdateView(LoginRequiredMixin, UpdateView):
 
         # solo los rodados que no estan subastados y no estan
         # asociados a un lote de una subasta vigente
-        lotes = Subasta.objects.get_current().lotes
+        lotes = Lote.objects.filter(grupo__subasta__cerrado_el=None)
         no_subastados = Rodado.objects.no_subastados()
-        sin_lote = no_subastados.exclude(lote__in=lotes)
-        kwargs['rodados_query'] = sin_lote | self.get_object().bienes.all()
+        sin_lote = no_subastados.exclude(lote__in=lotes) | self.get_object().bienes.all()
+        kwargs['rodados_query'] = sin_lote
         return kwargs
 
     def get_initial(self):

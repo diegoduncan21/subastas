@@ -33,17 +33,19 @@
             </thead>
             <tbody>
                 {% for bien in object.bienes.all %}
-                    <td>{{ bien.tipo }}</td>
-                    <td>{{ bien.numero_inventario }}</td>
-                    <td>{{ bien.descripcion }}</td>
-                    <td>{{ bien.modelo }}</td>
-                    <td>{{ bien.chasis }}</td>
-                    <td>{{ bien.motor }}</td>
-                    <td>{{ bien.dominio }}</td>
-                    <td>{{ bien.marca }}</td>
-                    <td>{{ bien.anio }}</td>
-                    <td>{{ bien.precio_base }}</td>
-                    <td>{{ bien.precio_venta }}</td>
+                    <tr>
+                        <td>{{ bien.tipo }}</td>
+                        <td>{{ bien.numero_inventario }}</td>
+                        <td>{{ bien.descripcion }}</td>
+                        <td>{{ bien.modelo }}</td>
+                        <td>{{ bien.chasis }}</td>
+                        <td>{{ bien.motor }}</td>
+                        <td>{{ bien.dominio }}</td>
+                        <td>{{ bien.marca }}</td>
+                        <td>{{ bien.anio }}</td>
+                        <td>{{ bien.precio_base }}</td>
+                        <td>{{ bien.precio_venta }}</td>
+                    </tr>
                 {% endfor %}
             </tbody>
         </table>

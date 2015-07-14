@@ -13,9 +13,13 @@ class ActaForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ActaForm, self).__init__(*args, **kwargs)
 
-        # Mostrar solo las personas inscriptas
         current_subasta = Subasta.objects.get_current()
+
+        # Mostrar solo las personas inscriptas
         self.fields['persona'].queryset = current_subasta.personas.all()
+
+        # Mostrar solo los profesionales de la subasta
+        self.fields['profesionales'].queryset = current_subasta.profesionales.all()
 
         self.helper = FormHelper()
         self.helper.form_method = "POST"
@@ -118,8 +122,19 @@ class RodadoForm(forms.ModelForm):
 
 
 class GrupoForm(forms.ModelForm):
+    lotes = forms.ModelMultipleChoiceField(
+        Lote.objects.none(),
+        required=False,
+        widget=forms.CheckboxSelectMultiple
+    )
+
     def __init__(self, *args, **kwargs):
+        self.kw = kwargs
+        self.lotes = kwargs.pop('lotes', None)
+
         super(GrupoForm, self).__init__(*args, **kwargs)
+        if self.lotes:
+            self.fields['lotes'].queryset = self.lotes
 
         self.fields['martillero'].queryset = Profesional.objects \
             .filter(titulo__nombre__iexact='martillero')
@@ -139,28 +154,32 @@ class GrupoForm(forms.ModelForm):
                               css_class='btn-default'))
         self.helper.layout = Layout(
             Div('numero',
-                'martillero')
+                'martillero',
+                'lotes')
         )
 
     def clean_numero(self):
         numero = self.cleaned_data.get('numero')
-        subasta = Subasta.objects.get_current()
-        if Grupo.objects.filter(subasta=subasta,
-                                numero=numero).exists():
-            raise forms.ValidationError("Este grupo ya existe.")
+        instance = self.kw.get('instance', None)  # If update
+        if instance and numero != instance.numero:
+            subasta = Subasta.objects.get_current()
+            if Grupo.objects.filter(subasta=subasta,
+                                    numero=numero).exists():
+                raise forms.ValidationError("Este grupo ya existe.")
         return numero
 
     class Meta:
         fields = [
             "numero",
             "martillero",
+            "lotes",
         ]
         model = Grupo
 
 
 class LoteForm(forms.ModelForm):
     rodados = forms.ModelMultipleChoiceField(
-        Rodado.objects.no_subastados(),
+        Rodado.objects.none(),
         required=False,
         widget=forms.CheckboxSelectMultiple
     )

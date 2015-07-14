@@ -20,23 +20,11 @@
             {% for user in user_list %}
               <a href="{% url 'users:update' user.id %}" class="list-group-item">
                 {{ user.username }}
-                {% if 'users.administrador' in user.get_all_permissions %}
-                  <span class="label label-success pull-right">
-                    administrador
-                  </span>
-                {% endif %}
-
-                {% if 'users.acreditador' in user.get_all_permissions %}
-                  <span class="label label-primary pull-right">
-                    acreditador
-                  </span>
-                {% endif %}
-
-                {% if 'users.actero' in user.get_all_permissions %}
+                {% for group in user.groups.all %}
                   <span class="label label-default pull-right">
-                    actero
+                    {{ group.name }}
                   </span>
-                {% endif %}
+                {% endfor %}
               </a>
             {% endfor %}
         </div>

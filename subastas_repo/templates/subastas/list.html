@@ -4,7 +4,9 @@
 
     <h2>
         Subasta vigente
-        <a class="btn btn-primary pull-right" href="{% url 'subastas:create' %}">Agregar Subasta</a>
+        {% if not current_subasta %}
+            <a class="btn btn-primary pull-right" href="{% url 'subastas:create' %}">Agregar Subasta</a>
+        {% endif %}
     </h2>
     {% if current_subasta %}
         <div class="list-group">

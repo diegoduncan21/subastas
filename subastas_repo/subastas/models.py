@@ -145,9 +145,3 @@ class Acta(models.Model):
 
     def __unicode__(self):
         return "Lote: %s comprado por: %s" % (self.lote, self.persona)
-
-    # def save(self, *args, **kwargs):
-    #     for bien in Rodado.objects.filter(lote=self.lote):
-    #         bien.subastado = True
-    #         bien.save()
-    #     super(Acta, self).save(*args, **kwargs)

@@ -78,6 +78,7 @@ def create_user(request):
             user = form.save()
             user.groups.add(form.cleaned_data.get('perfil'))
             user.set_password(form.cleaned_data.get('password'))
+            user.save()
             EmailAddress.objects.create(user=user,
                                         email=user.username,
                                         verified=True)
